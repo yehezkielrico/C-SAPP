@@ -264,7 +264,7 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <h4 class="text-lg font-medium text-gray-900 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">{{ $quiz->module->title }}</h4>
-                        <p class="mt-1 text-gray-600 dark:text-gray-400">{{ Str::limit($quiz->question, 100) }}</p>
+                        <p class="mt-1 text-gray-600 dark:text-gray-400">{{ Str::limit($quiz->module->description ?? $quiz->title, 100) }}</p>
                     </div>
                     <a href="{{ route('quizzes.show', $quiz->module_id) }}" class="inline-flex items-center px-4 py-2 bg-blue-100 dark:bg-blue-600/20 text-blue-700 dark:text-blue-400 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-600/30 transition-colors border border-blue-200 dark:border-blue-500/30">
                         Mulai
@@ -290,38 +290,78 @@
                 </button>
             </div>
 
-            <div class="space-y-4">
-                <!-- Notification 1 -->
-                <div class="group bg-yellow-100 dark:bg-yellow-600/10 backdrop-blur-lg rounded-lg p-4 hover:bg-yellow-200 dark:hover:bg-yellow-600/20 transition-all duration-200 border border-yellow-200 dark:border-yellow-500/30">
-                    <div class="flex items-start space-x-4">
-                        <div class="flex-shrink-0">
-                            <div class="w-10 h-10 rounded-lg bg-yellow-200 dark:bg-yellow-600/20 flex items-center justify-center border border-yellow-300 dark:border-yellow-500/30">
-                                <i class="fas fa-exclamation-triangle text-yellow-700 dark:text-yellow-400"></i>
-                            </div>
-                        </div>
-                        <div class="flex-1">
-                            <h5 class="text-gray-900 dark:text-white group-hover:text-yellow-700 dark:group-hover:text-yellow-400 transition-colors">Ancaman Baru Terdeteksi</h5>
-                            <p class="mt-1 text-gray-600 dark:text-gray-400">Varian phishing baru menargetkan pengguna media sosial. Pelajari cara melindungi diri Anda.</p>
-                            <a href="#" class="inline-block mt-2 text-yellow-700 dark:text-yellow-400 hover:text-yellow-600 dark:hover:text-yellow-300 transition-colors text-sm">Baca selengkapnya</a>
-                        </div>
-                    </div>
-                </div>
+            @php
+                $recentThreshold = now()->subDays(7);
+                $newModules = collect($modules ?? [])->filter(function($m) use ($recentThreshold) {
+                    return isset($m->created_at) && $m->created_at >= $recentThreshold;
+                });
+                $newQuizzes = collect($latestQuizzes ?? [])->filter(function($q) use ($recentThreshold) {
+                    return isset($q->created_at) && $q->created_at >= $recentThreshold;
+                });
+                $incompleteModules = collect($modules ?? [])->filter(function($m) {
+                    return method_exists($m, 'isCompletedByUser') ? !$m->isCompletedByUser() : true;
+                })->take(3);
+            @endphp
 
-                <!-- Notification 2 -->
-                <div class="group bg-blue-100 dark:bg-blue-600/10 backdrop-blur-lg rounded-lg p-4 hover:bg-blue-200 dark:hover:bg-blue-600/20 transition-all duration-200 border border-blue-200 dark:border-blue-500/30">
-                    <div class="flex items-start space-x-4">
-                        <div class="flex-shrink-0">
-                            <div class="w-10 h-10 rounded-lg bg-blue-200 dark:bg-blue-600/20 flex items-center justify-center border border-blue-300 dark:border-blue-500/30">
-                                <i class="fas fa-book text-blue-700 dark:text-blue-400"></i>
+            <div class="space-y-4">
+                @if($newModules->isNotEmpty() || $newQuizzes->isNotEmpty())
+                    @foreach($newModules->take(2) as $m)
+                        <div class="group bg-white dark:bg-[#0F172A]/60 backdrop-blur-lg rounded-lg p-4 transition-all duration-200 border border-blue-100 dark:border-blue-700/30">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 rounded-lg bg-white dark:bg-white/10 flex items-center justify-center border border-gray-200 dark:border-gray-600/30">
+                                        <i class="fas fa-book text-gray-400 dark:text-gray-300"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <h5 class="text-gray-900 dark:text-white transition-colors">Materi Baru: {{ $m->title }}</h5>
+                                    <p class="mt-1 text-gray-600 dark:text-gray-400">{{ Str::limit($m->description, 120) }}</p>
+                                    <a href="{{ route('materials.module', $m) }}" class="inline-block mt-2 text-blue-700 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-sm">Mulai belajar</a>
+                                </div>
                             </div>
                         </div>
-                        <div class="flex-1">
-                            <h5 class="text-gray-900 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">Materi Baru Tersedia</h5>
-                            <p class="mt-1 text-gray-600 dark:text-gray-400">Modul baru tentang keamanan cloud computing telah ditambahkan ke kurikulum Anda.</p>
-                            <a href="#" class="inline-block mt-2 text-blue-700 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-sm">Mulai belajar</a>
+                    @endforeach
+
+                    @foreach($newQuizzes->take(2) as $q)
+                        <div class="group bg-white dark:bg-[#0F172A]/60 backdrop-blur-lg rounded-lg p-4 transition-all duration-200 border border-blue-100 dark:border-blue-700/30">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 rounded-lg bg-white dark:bg-white/10 flex items-center justify-center border border-gray-200 dark:border-gray-600/30">
+                                        <i class="fas fa-question-circle text-gray-400 dark:text-gray-300"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <h5 class="text-gray-900 dark:text-white transition-colors">Kuis Baru: {{ $q->module->title ?? $q->title }}</h5>
+                                    <p class="mt-1 text-gray-600 dark:text-gray-400">{{ Str::limit($q->module->description ?? $q->title, 120) }}</p>
+                                    <a href="{{ route('quizzes.show', $q->module_id) }}" class="inline-block mt-2 text-blue-700 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-sm">Mulai kuis</a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    @endforeach
+                @endif
+
+                @if($incompleteModules->isNotEmpty())
+                    @foreach($incompleteModules as $m)
+                        <div class="group bg-white dark:bg-[#0F172A]/60 backdrop-blur-lg rounded-lg p-4 transition-all duration-200 border border-blue-100 dark:border-blue-700/30">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 rounded-lg bg-white dark:bg-white/10 flex items-center justify-center border border-gray-200 dark:border-gray-600/30">
+                                        <i class="fas fa-book-open text-gray-400 dark:text-gray-300"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <h5 class="text-gray-900 dark:text-white transition-colors">Lanjutkan: {{ $m->title }}</h5>
+                                    <p class="mt-1 text-gray-600 dark:text-gray-400">{{ Str::limit($m->description, 120) }}</p>
+                                    <a href="{{ route('materials.module', $m) }}" class="inline-block mt-2 text-blue-700 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-sm">Lanjutkan membaca</a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
+
+                @if($newModules->isEmpty() && $newQuizzes->isEmpty() && $incompleteModules->isEmpty())
+                    <div class="text-center py-4 text-sm text-gray-600 dark:text-gray-400">Tidak ada notifikasi terbaru.</div>
+                @endif
             </div>
         </div>
     </div>

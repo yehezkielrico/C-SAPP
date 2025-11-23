@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ darkMode: localStorage.getItem('darkMode') !== 'false' }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))" :class="{ 'dark': darkMode }">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ darkMode: localStorage.getItem('darkMode') !== 'false', mobileOpen: false, desktopOpen: true }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))" :class="{ 'dark': darkMode }">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,8 +17,15 @@
 </head>
 <body class="font-sans antialiased" :class="{ 'bg-gray-100 text-gray-900': !darkMode, 'bg-[#070A13] text-gray-100': darkMode }">
     <div class="min-h-screen">
-        <!-- Sidebar -->
-    <div class="fixed inset-y-0 left-0 w-72 bg-white/80 dark:bg-[#1A2333]/20 backdrop-blur-sm border-r border-gray-200 dark:border-gray-800">
+        <!-- Sidebar (desktop) -->
+        <div x-cloak x-show="desktopOpen"
+            x-transition:enter="transform transition-transform duration-200"
+            x-transition:enter-start="-translate-x-72"
+            x-transition:enter-end="translate-x-0"
+            x-transition:leave="transform transition-transform duration-200"
+            x-transition:leave-start="translate-x-0"
+            x-transition:leave-end="-translate-x-72"
+            class="hidden md:block fixed inset-y-0 left-0 w-72 bg-white/80 dark:bg-[#1A2333]/20 backdrop-blur-sm border-r border-gray-200 dark:border-gray-800 z-50">
             <div class="flex items-center justify-between h-16 px-6 border-b border-gray-800">
                 <div class="flex items-center">
                     <div class="relative">
@@ -30,78 +37,78 @@
                         </svg>
                     </div>
                     <span class="ml-3 text-xl font-bold text-gray-900 dark:text-white">Admin Panel</span>
+                    <!-- Sidebar toggle (inside sidebar header, next to logo) -->
+                    <button @click="desktopOpen = !desktopOpen" aria-label="Toggle sidebar" class="ml-3 md:inline-flex items-center justify-center p-1 rounded-md hover:bg-gray-100 dark:hover:bg-[#1A2333]/50" style="z-index:10002;">
+                        <svg x-show="desktopOpen" class="w-4 h-4 text-gray-700 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        <svg x-show="!desktopOpen" class="w-4 h-4 text-gray-700 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
                 </div>
             </div>
-            <nav class="mt-8">
-                <div class="px-4 space-y-2">
-                    <a href="{{ route('admin.dashboard') }}" class="group flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.dashboard') ? 'bg-blue-100 dark:bg-[#1A2333]/70 text-blue-700 dark:text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#1A2333]/50' }}">
-                        <div class="relative">
-                            <div class="absolute -inset-1 {{ request()->routeIs('admin.dashboard') ? 'opacity-50' : 'opacity-0 group-hover:opacity-30' }} blur-lg filter bg-gradient-to-r from-blue-600 to-blue-500 transition-opacity duration-200"></div>
-                            <svg class="relative w-5 h-5 mr-3 {{ request()->routeIs('admin.dashboard') ? 'text-blue-500' : 'text-gray-400 group-hover:text-blue-500' }} transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            @include('components.admin-sidebar-links')
+        </div>
+
+        <!-- Mobile Sidebar (overlay) -->
+        <div x-cloak x-show="mobileOpen" @keydown.window.escape="mobileOpen = false" class="md:hidden fixed inset-0" style="z-index: 9999;">
+            <div class="absolute inset-0 bg-black/40" @click="mobileOpen = false" style="z-index: 9999;"></div>
+            <div class="absolute inset-y-0 left-0 w-72 bg-dark dark:bg-[#0b1220] backdrop-blur-sm border-r border-gray-200 dark:border-gray-800 p-4 overflow-y-auto" @click.away="mobileOpen = false" style="z-index: 10000;">
+                <!-- reuse nav content -->
+                <div class="flex items-center h-16 px-2 border-b border-gray-800">
+                    <div class="flex items-center">
+                        <svg class="w-8 h-8 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>
-                        </div>
-                        Dashboard
-                    </a>
-                    <a href="{{ route('admin.users.index') }}" class="group flex items-center px-4 py-3 text-gray-300 hover:text-white rounded-lg transition-all duration-200 {{ request()->routeIs('admin.users.*') ? 'bg-[#1A2333]/70 text-white' : 'hover:bg-[#1A2333]/50' }}">
-                        <a href="{{ route('admin.users.index') }}" class="group flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.users.*') ? 'bg-blue-100 dark:bg-[#1A2333]/70 text-blue-700 dark:text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#1A2333]/50' }}">
-                        <div class="relative">
-                            <div class="absolute -inset-1 {{ request()->routeIs('admin.users.*') ? 'opacity-50' : 'opacity-0 group-hover:opacity-30' }} blur-lg filter bg-gradient-to-r from-blue-600 to-blue-500 transition-opacity duration-200"></div>
-                            <svg class="relative w-5 h-5 mr-3 {{ request()->routeIs('admin.users.*') ? 'text-blue-500' : 'text-gray-400 group-hover:text-blue-500' }} transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
-                        </div>
-                        Pengguna
-                    </a>
-                    <a href="{{ route('admin.modules.index') }}" class="group flex items-center px-4 py-3 text-gray-300 hover:text-white rounded-lg transition-all duration-200 {{ request()->routeIs('admin.modules.*') ? 'bg-[#1A2333]/70 text-white' : 'hover:bg-[#1A2333]/50' }}">
-                        <a href="{{ route('admin.modules.index') }}" class="group flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.modules.*') ? 'bg-blue-100 dark:bg-[#1A2333]/70 text-blue-700 dark:text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#1A2333]/50' }}">
-                        <div class="relative">
-                            <div class="absolute -inset-1 {{ request()->routeIs('admin.modules.*') ? 'opacity-50' : 'opacity-0 group-hover:opacity-30' }} blur-lg filter bg-gradient-to-r from-blue-600 to-blue-500 transition-opacity duration-200"></div>
-                            <svg class="relative w-5 h-5 mr-3 {{ request()->routeIs('admin.modules.*') ? 'text-blue-500' : 'text-gray-400 group-hover:text-blue-500' }} transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                        </svg>
-                        </div>
-                        Modul
-                    </a>
-                    <a href="{{ route('admin.quizzes.index') }}" class="group flex items-center px-4 py-3 text-gray-300 hover:text-white rounded-lg transition-all duration-200 {{ request()->routeIs('admin.quizzes.*') ? 'bg-[#1A2333]/70 text-white' : 'hover:bg-[#1A2333]/50' }}">
-                        <a href="{{ route('admin.quizzes.index') }}" class="group flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.quizzes.*') ? 'bg-blue-100 dark:bg-[#1A2333]/70 text-blue-700 dark:text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#1A2333]/50' }}">
-                        <div class="relative">
-                            <div class="absolute -inset-1 {{ request()->routeIs('admin.quizzes.*') ? 'opacity-50' : 'opacity-0 group-hover:opacity-30' }} blur-lg filter bg-gradient-to-r from-blue-600 to-blue-500 transition-opacity duration-200"></div>
-                            <svg class="relative w-5 h-5 mr-3 {{ request()->routeIs('admin.quizzes.*') ? 'text-blue-500' : 'text-gray-400 group-hover:text-blue-500' }} transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
-                        </div>
-                        Kuis
-                    </a>
-                    <a href="{{ route('admin.simulations.index') }}" class="group flex items-center px-4 py-3 text-gray-300 hover:text-white rounded-lg transition-all duration-200 {{ request()->routeIs('admin.simulations.*') ? 'bg-[#1A2333]/70 text-white' : 'hover:bg-[#1A2333]/50' }}">
-                        <a href="{{ route('admin.simulations.index') }}" class="group flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.simulations.*') ? 'bg-blue-100 dark:bg-[#1A2333]/70 text-blue-700 dark:text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#1A2333]/50' }}">
-                        <div class="relative">
-                            <div class="absolute -inset-1 {{ request()->routeIs('admin.simulations.*') ? 'opacity-50' : 'opacity-0 group-hover:opacity-30' }} blur-lg filter bg-gradient-to-r from-blue-600 to-blue-500 transition-opacity duration-200"></div>
-                            <svg class="relative w-5 h-5 mr-3 {{ request()->routeIs('admin.simulations.*') ? 'text-blue-500' : 'text-gray-400 group-hover:text-blue-500' }} transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                        </div>
-                        Simulasi
-                    </a>
-                    <a href="{{ route('admin.surveys.index') }}" class="group flex items-center px-4 py-3 text-gray-300 hover:text-white rounded-lg transition-all duration-200 {{ request()->routeIs('admin.surveys.*') ? 'bg-[#1A2333]/70 text-white' : 'hover:bg-[#1A2333]/50' }}">
-                        <a href="{{ route('admin.surveys.index') }}" class="group flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.surveys.*') ? 'bg-blue-100 dark:bg-[#1A2333]/70 text-blue-700 dark:text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#1A2333]/50' }}">
-                        <div class="relative">
-                            <div class="absolute -inset-1 {{ request()->routeIs('admin.surveys.*') ? 'opacity-50' : 'opacity-0 group-hover:opacity-30' }} blur-lg filter bg-gradient-to-r from-blue-600 to-blue-500 transition-opacity duration-200"></div>
-                            <svg class="relative w-5 h-5 mr-3 {{ request()->routeIs('admin.surveys.*') ? 'text-blue-500' : 'text-gray-400 group-hover:text-blue-500' }} transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
-                        </div>
-                        Survei
-                    </a>
+                        <span class="ml-1 text-lg font-bold">Admin Panel</span>
+                    </div>
                 </div>
-            </nav>
+                <nav class="mt-4">
+                    <div class="px-2 space-y-2">
+                        @include('components.admin-sidebar-links')
+                    </div>
+                </nav>
+            </div>
         </div>
 
         <!-- Main Content -->
-        <div class="ml-72">
+        <div :class="desktopOpen ? 'md:ml-72 ml-0' : 'md:ml-0 ml-0'">
             <!-- Top Navigation -->
-            <div class="bg-white/80 dark:bg-[#1A2333]/30 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
-                <div class="flex items-center justify-end h-16 px-8">
+            <div class="bg-white/80 dark:bg-[#1A2333]/30 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 sticky top-0 z-40">
+                <div class="relative flex items-center justify-between h-16 px-4 md:px-8">
+                    <!-- Mobile hamburger -->
+                    <div class="flex items-center md:hidden">
+                        <button @click="mobileOpen = !mobileOpen" aria-label="Toggle sidebar" style="position: relative; z-index: 10001;" class="p-2 rounded-md bg-transparent hover:bg-gray-100 dark:hover:bg-[#1A2333]/50">
+                            <svg class="w-6 h-6 text-gray-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- Desktop sidebar toggle (absolute, always visible on md+) -->
+                    <div class="hidden md:block absolute left-4 top-1/2 transform -translate-y-1/2">
+                        <button @click="desktopOpen = !desktopOpen" aria-label="Toggle desktop sidebar" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-[#1A2333]/50" style="position: relative; z-index: 10002;">
+                            <svg x-show="desktopOpen" class="w-5 h-5 text-gray-100 dark:text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            <svg x-show="!desktopOpen" class="w-5 h-5 text-gray-100 dark:text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Persistent open button when sidebar is closed -->
+                    <div x-cloak x-show="!desktopOpen" class="hidden md:block">
+                        <div class="fixed left-2 top-4 z-50">
+                            <button @click="desktopOpen = true" aria-label="Open sidebar" class="p-2 bg-blue-600 text-white rounded-md shadow-lg hover:bg-blue-700">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex-1 flex items-center justify-end">
                     <div class="flex items-center space-x-4">
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" class="flex items-center space-x-3 focus:outline-none">
@@ -118,7 +125,7 @@
                             <!-- Dropdown Menu -->
                             <div x-show="open" 
                                  @click.away="open = false"
-                                 class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-[#1A2333] border border-gray-200 dark:border-gray-800"
+                                 class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-dark dark:bg-[#1A2333] border border-gray-200 dark:border-gray-800"
                                  x-transition:enter="transition ease-out duration-100"
                                  x-transition:enter-start="transform opacity-0 scale-95"
                                  x-transition:enter-end="transform opacity-100 scale-100"
