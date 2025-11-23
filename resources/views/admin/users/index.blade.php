@@ -6,7 +6,7 @@
                 <div class="absolute -inset-1">
                     <div class="w-full h-full mx-auto opacity-30 blur-lg filter bg-gradient-to-r from-blue-600 to-blue-500"></div>
                 </div>
-                <div class="relative bg-white/80 dark:bg-[#1A2333]/30 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+                <div class="relative bg-white/80 dark:bg-[#1A2333]/30 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-800 p-4 sm:p-6">
                     <div class="flex justify-between items-center">
                         <div>
                             <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Daftar Pengguna</h2>
@@ -32,25 +32,56 @@
                     <div class="w-full h-full mx-auto opacity-20 blur-lg filter bg-gradient-to-r from-blue-600 to-blue-500"></div>
                 </div>
                 <div class="relative bg-white/80 dark:bg-[#1A2333]/30 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
-                    <div class="overflow-x-auto">
+                    <!-- Mobile: stacked cards -->
+                    <div class="sm:hidden p-4 space-y-4">
+                        @foreach($users as $user)
+                        <div class="bg-[#f8fafc]/5 dark:bg-[#0b1220]/40 rounded-lg p-4">
+                            <div class="flex items-start justify-between">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10">
+                                        <div class="relative">
+                                            <div class="absolute -inset-1">
+                                                <div class="w-full h-full mx-auto opacity-30 blur-lg filter bg-gradient-to-r from-blue-600 to-blue-500"></div>
+                                            </div>
+                                            <div class="relative h-10 w-10 rounded-lg bg-[#1A2333]/50 border border-gray-800 flex items-center justify-center">
+                                                <span class="text-lg font-medium text-blue-500">{{ substr($user->name, 0, 1) }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ml-3">
+                                        <div class="text-sm font-semibold text-gray-900 dark:text-white">{{ $user->name }}</div>
+                                        <div class="text-xs text-gray-400 truncate w-48">{{ $user->email }}</div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-xs text-gray-400">{{ $user->created_at->format('d M Y') }}</div>
+                                    <div class="mt-2">
+                                        @if($user->email_verified_at)
+                                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-green-500/10 text-green-300 border border-green-500/20">Aktif</span>
+                                        @else
+                                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-red-500/10 text-red-300 border border-red-500/20">Belum Verifikasi</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <a href="{{ route('admin.users.show', $user->id) }}" class="text-sm text-blue-500 hover:underline">Lihat detail →</a>
+                            </div>
+                        </div>
+                        @endforeach
+                        <div class="pt-2">{{ $users->links() }}</div>
+                    </div>
+
+                    <!-- Desktop: table -->
+                    <div class="hidden sm:block overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50 dark:bg-[#1A2333]/50">
+                            <thead class="bg-gray-50 dark:bg-[#1A2333]/50">
                                 <tr>
-                                    <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                                        Nama
-                                    </th>
-                                    <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                                        Email
-                                    </th>
-                                    <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                                        Tanggal Bergabung
-                                    </th>
-                                    <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                                        Status
-                                    </th>
-                                    <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                                        Aksi
-                                    </th>
+                                    <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Nama</th>
+                                    <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Email</th>
+                                    <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Tanggal Bergabung</th>
+                                    <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
+                                    <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-800">
@@ -64,57 +95,17 @@
                                                         <div class="w-full h-full mx-auto opacity-30 blur-lg filter bg-gradient-to-r from-blue-600 to-blue-500"></div>
                                                     </div>
                                                     <div class="relative h-10 w-10 rounded-lg bg-[#1A2333]/50 border border-gray-800 flex items-center justify-center">
-                                                        <span class="text-lg font-medium text-blue-500">
-                                                            {{ substr($user->name, 0, 1) }}
-                                                        </span>
+                                                        <span class="text-lg font-medium text-blue-500">{{ substr($user->name, 0, 1) }}</span>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                                    {{ $user->name }}
-                                                </div>
-                                            </div>
+                                            <div class="ml-4"><div class="text-sm font-medium text-gray-900 dark:text-white">{{ $user->name }}</div></div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-300">{{ $user->email }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-300">{{ $user->created_at->format('d M Y') }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        @if($user->email_verified_at)
-                                            <div class="relative inline-flex">
-                                                <div class="absolute -inset-1">
-                                                    <div class="w-full h-full mx-auto opacity-30 blur-lg filter bg-gradient-to-r from-green-600 to-green-500"></div>
-                                                </div>
-                                                <span class="relative px-3 py-1 text-xs font-medium rounded-lg bg-green-500/10 text-green-400 border border-green-500/20">
-                                                    Aktif
-                                                </span>
-                                            </div>
-                                        @else
-                                            <div class="relative inline-flex">
-                                                <div class="absolute -inset-1">
-                                                    <div class="w-full h-full mx-auto opacity-30 blur-lg filter bg-gradient-to-r from-red-600 to-red-500"></div>
-                                                </div>
-                                                <span class="relative px-3 py-1 text-xs font-medium rounded-lg bg-red-500/10 text-red-400 border border-red-500/20">
-                                                    Belum Verifikasi
-                                                </span>
-                                            </div>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <a href="{{ route('admin.users.show', $user->id) }}" class="group relative inline-flex items-center">
-                                            <div class="absolute -inset-1 opacity-0 group-hover:opacity-30 blur-lg filter bg-gradient-to-r from-blue-600 to-blue-500 transition-opacity duration-200"></div>
-                                            <span class="relative text-blue-500 hover:text-blue-400 transition-colors duration-200">
-                                                Detail
-                                                <svg class="inline-block w-4 h-4 ml-1 transition-transform duration-200 transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                                </svg>
-                                            </span>
-                                        </a>
-                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-300">{{ $user->email }}</div></td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-300">{{ $user->created_at->format('d M Y') }}</div></td>
+                                    <td class="px-6 py-4 whitespace-nowrap">@if($user->email_verified_at)<div class="relative inline-flex"><div class="absolute -inset-1"><div class="w-full h-full mx-auto opacity-30 blur-lg filter bg-gradient-to-r from-green-600 to-green-500"></div></div><span class="relative px-3 py-1 text-xs font-medium rounded-lg bg-green-500/10 text-green-400 border border-green-500/20">Aktif</span></div>@else<div class="relative inline-flex"><div class="absolute -inset-1"><div class="w-full h-full mx-auto opacity-30 blur-lg filter bg-gradient-to-r from-red-600 to-red-500"></div></div><span class="relative px-3 py-1 text-xs font-medium rounded-lg bg-red-500/10 text-red-400 border border-red-500/20">Belum Verifikasi</span></div>@endif</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium"><a href="{{ route('admin.users.show', $user->id) }}" class="group relative inline-flex items-center"><div class="absolute -inset-1 opacity-0 group-hover:opacity-30 blur-lg filter bg-gradient-to-r from-blue-600 to-blue-500 transition-opacity duration-200"></div><span class="relative text-blue-500 hover:text-blue-400 transition-colors duration-200">Detail<svg class="inline-block w-4 h-4 ml-1 transition-transform duration-200 transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></span></a></td>
                                 </tr>
                                 @endforeach
                             </tbody>
