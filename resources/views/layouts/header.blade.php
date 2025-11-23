@@ -107,9 +107,9 @@
                                     <i class="fas fa-bug mr-2"></i>Laporan
                                 </a>
                                 <div class="border-t border-gray-200 dark:border-gray-700/50 my-1"></div>
-                                <form method="POST" action="{{ route('logout') }}" data-logout>
+                                <form method="POST" action="{{ route('logout') }}" data-logout id="logout-form-desktop">
                                     @csrf
-                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700/30 dark:hover:text-white">
+                                    <button type="button" data-logout-button="logout-form-desktop" class="w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700/30 dark:hover:text-white">
                                         <i class="fas fa-sign-out-alt mr-2"></i>Keluar
                                     </button>
                                 </form>
@@ -200,9 +200,9 @@
                     <a href="{{ route('reports') }}" class="block px-4 py-2 text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700/30 dark:hover:text-white">
                         <i class="fas fa-bug mr-2"></i>Laporan
                     </a>
-                    <form method="POST" action="{{ route('logout') }}" data-logout>
+                    <form method="POST" action="{{ route('logout') }}" data-logout id="logout-form-mobile">
                         @csrf
-                        <button type="submit" class="w-full text-left px-4 py-2 text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700/30 dark:hover:text-white">
+                        <button type="button" data-logout-button="logout-form-mobile" class="w-full text-left px-4 py-2 text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700/30 dark:hover:text-white">
                             <i class="fas fa-sign-out-alt mr-2"></i>Keluar
                         </button>
                     </form>
@@ -224,16 +224,70 @@
     </div>
 </header>
 
+<!-- Logout confirmation modal (themed with Tailwind / dark: classes) -->
+<div id="logout-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+    <div class="relative bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-sm p-6 border border-gray-200 dark:border-gray-700">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Konfirmasi Keluar</h3>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Apakah Anda yakin ingin keluar dari akun Anda?</p>
+
+        <div class="mt-6 flex justify-end space-x-3">
+            <button id="logout-cancel" class="px-4 py-2 rounded bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600">Batal</button>
+            <button id="logout-confirm" class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">Keluar</button>
+        </div>
+    </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Mobile menu toggle
     const mobileMenuButton = document.querySelector('.mobile-menu-btn');
     const mobileMenu = document.querySelector('.mobile-menu');
-    
     if (mobileMenuButton && mobileMenu) {
         mobileMenuButton.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
         });
     }
+
+    // Themed logout modal handling
+    const logoutModal = document.getElementById('logout-modal');
+    const logoutCancel = document.getElementById('logout-cancel');
+    const logoutConfirm = document.getElementById('logout-confirm');
+    let pendingLogoutForm = null;
+
+    // Find all logout trigger buttons
+    document.querySelectorAll('[data-logout-button]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const formId = btn.getAttribute('data-logout-button');
+            const form = document.getElementById(formId) || btn.closest('form');
+            if (!form) return;
+            pendingLogoutForm = form;
+            // show modal
+            logoutModal.classList.remove('hidden');
+            // trap focus briefly (optional minimal)
+            logoutConfirm.focus();
+        });
+    });
+
+    // Cancel hides the modal
+    logoutCancel.addEventListener('click', () => {
+        logoutModal.classList.add('hidden');
+        pendingLogoutForm = null;
+    });
+
+    // Confirm submits the stored form
+    logoutConfirm.addEventListener('click', () => {
+        if (!pendingLogoutForm) return;
+        // programmatically submit the form
+        pendingLogoutForm.submit();
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !logoutModal.classList.contains('hidden')) {
+            logoutModal.classList.add('hidden');
+            pendingLogoutForm = null;
+        }
+    });
 });
-</script> 
+</script>

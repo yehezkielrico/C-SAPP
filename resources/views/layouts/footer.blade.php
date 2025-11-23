@@ -6,8 +6,7 @@
             <div class="md:col-span-2">
                 <h3 class="text-lg font-bold text-blue-600 dark:text-blue-400 mb-4">Tentang <span class="text-gray-900 dark:text-white">C-SAPP</span></h3>
                 <p class="text-gray-700 dark:text-gray-400 mb-4 leading-relaxed">
-                    C-SAPP adalah aplikasi web buatan Kelompok 5 untuk menyelesaikan Ujian Akhir Semester Pemrograman Web 2. Kami berharap aplikasi ini bermanfaat sebagai sumber belajar keamanan siber.
-                </p>
+                    C-SAPP adalah aplikasi web yang dikembangkan untuk menyelesaikan Tugas Akhir program studi D3. Aplikasi ini diharapkan dapat menjadi sarana pembelajaran dan pemahaman lebih dalam mengenai keamanan siber.
                 <div class="flex space-x-4 mt-4">
                     <a href="#" class="p-2 bg-blue-600/10 hover:bg-blue-600/30 rounded-full transition">
                         <i class="fab fa-twitter text-xl text-blue-400"></i>
