@@ -8,7 +8,6 @@
     },
     "routes": [
         
-
         {
           "src": "/build/(.*)",
           "dest": "/public/build/$1"
@@ -26,14 +25,12 @@
           "dest": "/public/vendors/$1"
         },
 
-        
         {
           "src": "/storage/(.*)",
-          "dest": "/public/storage/$1"
+          "dest": "/storage/app/public/$1" 
         },
 
         {
-
           "src": "/(.*\\.(ico|png|jpg|jpeg|gif|svg|webp|txt|xml))",
           "dest": "/public/$1"
         },
