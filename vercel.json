@@ -9,30 +9,37 @@
     "routes": [
         
 
-        { "src": "/build/(.*)", "dest": "/public/build/$1" },
-        { "src": "/css/(.*)", "dest": "/public/css/$1" },
-        { "src": "/js/(.*)", "dest": "/public/js/$1" },
-        { "src": "/vendors/(.*)", "dest": "/public/vendors/$1" },
+        { "src": "/build/(.*)", "dest": "/public/build/$1", "headers": { "cache-control": "public, max-age=31536000" } },
+        
 
+        { "src": "/css/(.*)", "dest": "/public/css/$1", "headers": { "cache-control": "public, max-age=31536000" } },
+        
+
+        { "src": "/js/(.*)", "dest": "/public/js/$1", "headers": { "cache-control": "public, max-age=31536000" } },
+        
+
+        { "src": "/vendors/(.*)", "dest": "/public/vendors/$1", "headers": { "cache-control": "public, max-age=31536000" } },
+        
 
         {
           "src": "/storage/images/(.*)",
-          "dest": "/storage/app/public/images/$1" 
+          "dest": "/storage/app/public/images/$1",
+          "headers": { "cache-control": "public, max-age=86400" }
         },
-
-
+        
         {
           "src": "/storage/(.*)",
-          "dest": "/storage/app/public/$1" 
+          "dest": "/storage/app/public/$1",
+          "headers": { "cache-control": "public, max-age=86400" }
         },
         
 
         {
-          "src": "/(.*\\.(ico|png|jpg|jpeg|gif|svg|webp|txt|xml))",
-          "dest": "/public/$1"
+          "src": "/(.*\\.(ico|png|jpg|jpeg|gif|svg|webp|txt|xml|woff|woff2|ttf|eot))",
+          "dest": "/public/$1",
+          "headers": { "cache-control": "public, max-age=31536000" }
         },
         
-
         {
           "src": "/(.*)",
           "dest": "/api/index.php"
@@ -40,8 +47,8 @@
     ],
     "env": {
         "APP_ENV": "production",
-        "APP_DEBUG": "true",
-        "APP_URL": "",
+        "APP_DEBUG": "false",
+        "APP_URL": "https://c-sapp-trt2-695atb442-navaaa28s-projects.vercel.app/",
         
         "APP_CONFIG_CACHE": "/tmp/config.php",
         "APP_EVENTS_CACHE": "/tmp/events.php",
