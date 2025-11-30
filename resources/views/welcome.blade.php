@@ -25,7 +25,7 @@
             <div class="mt-8 flex flex-col sm:flex-row items-center gap-4">
                 <a href="{{ route('register') }}"
                     class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg shadow-lg hover:scale-105 transition-transform duration-300">
-                     Join Slurr
+                     Join
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -34,7 +34,7 @@
                 </a>
                 <a href="{{ route('register') }}"
                     class="inline-flex items-center gap-2 text-sm text-blue-400 hover:underline mt-2 sm:mt-0">
-                    Pelajari Lebih Lanjut disini Slurr
+                    Pelajari Lebih Lanjut disini 
                 </a>
             </div>
         </div>

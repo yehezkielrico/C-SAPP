@@ -106,6 +106,12 @@
                                     <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-300">{{ $user->created_at->format('d M Y') }}</div></td>
                                     <td class="px-6 py-4 whitespace-nowrap">@if($user->email_verified_at)<div class="relative inline-flex"><div class="absolute -inset-1"><div class="w-full h-full mx-auto opacity-30 blur-lg filter bg-gradient-to-r from-green-600 to-green-500"></div></div><span class="relative px-3 py-1 text-xs font-medium rounded-lg bg-green-500/10 text-green-400 border border-green-500/20">Aktif</span></div>@else<div class="relative inline-flex"><div class="absolute -inset-1"><div class="w-full h-full mx-auto opacity-30 blur-lg filter bg-gradient-to-r from-red-600 to-red-500"></div></div><span class="relative px-3 py-1 text-xs font-medium rounded-lg bg-red-500/10 text-red-400 border border-red-500/20">Belum Verifikasi</span></div>@endif</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium"><a href="{{ route('admin.users.show', $user->id) }}" class="group relative inline-flex items-center"><div class="absolute -inset-1 opacity-0 group-hover:opacity-30 blur-lg filter bg-gradient-to-r from-blue-600 to-blue-500 transition-opacity duration-200"></div><span class="relative text-blue-500 hover:text-blue-400 transition-colors duration-200">Detail<svg class="inline-block w-4 h-4 ml-1 transition-transform duration-200 transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></span></a></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium"><form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline"><@csrf
+                                            @method('DELETE')
+                                                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-[#1A2333]/50 hover:text-red-400" role="menuitem" onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">
+                                                            Hapus Pengguna
+                                                        </button>
+                                        </form></td>
                                 </tr>
                                 @endforeach
                             </tbody>
