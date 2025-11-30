@@ -7,7 +7,7 @@
 <a href="#"> <img src="https://img.shields.io/badge/build-pending-lightgrey" alt="Build Status"></a>
 </p>
 
-# Web2_UAS-C-SAPP-
+# C-SAPP
 
 Project sederhana berbasis Laravel yang berfungsi sebagai platform pembelajaran dan forum. Repositori ini berisi implementasi Laravel dengan fitur modul pembelajaran, kuis, forum, profil pengguna, dan notifikasi.
 
@@ -39,8 +39,8 @@ Ikuti langkah berikut untuk menjalankan proyek ini secara lokal:
 
 ```powershell
 # 1. clone repository
-git clone <repo-url> web2_uas
-cd web2_uas
+git clone https://github.com/yehezkielrico/C-SAPP.git C-SAPP
+cd C-SAPP
 
 # 2. install dependencies
 composer install
