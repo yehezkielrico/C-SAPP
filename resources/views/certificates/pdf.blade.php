@@ -424,12 +424,12 @@
             <div class="header">
                 <div class="logo-section">
                 <div class="logo">
-                        @if($canRenderImages && file_exists($logoPath))
-                            {{-- Lokal / server dengan GD: pakai PNG --}}
+                        @if(file_exists($logoSvgPath))
+                            {{-- Utamakan SVG via <img>, tidak butuh ekstensi GD --}}
+                            <img src="{{ $logoSvgPath }}" alt="Logo">
+                        @elseif($canRenderImages && file_exists($logoPath))
+                            {{-- Fallback PNG bila GD tersedia --}}
                             <img src="{{ $logoPath }}" alt="Logo">
-                        @elseif(file_exists($logoSvgPath))
-                            {{-- Server tanpa GD (mis. Vercel): pakai SVG inline --}}
-                            {!! file_get_contents($logoSvgPath) !!}
                         @else
                             <div class="logo-text">CS</div>
                         @endif
@@ -478,19 +478,19 @@
         </div>
         
         <div class="seal">
-            @if($canRenderImages && file_exists($sealPath))
+            @if(file_exists($sealSvgPath))
+                <img src="{{ $sealSvgPath }}" alt="Cap" class="seal-image">
+            @elseif($canRenderImages && file_exists($sealPath))
                 <img src="{{ $sealPath }}" alt="Cap" class="seal-image">
-            @elseif(file_exists($sealSvgPath))
-                {!! file_get_contents($sealSvgPath) !!}
             @endif
             <div class="seal-text">OFFICIAL<br>SEAL</div>
         </div>
         
         <div class="signature-section">
-            @if($canRenderImages && file_exists($signaturePath))
+            @if(file_exists($signatureSvgPath))
+                <img src="{{ $signatureSvgPath }}" alt="Tanda Tangan" class="signature-image">
+            @elseif($canRenderImages && file_exists($signaturePath))
                 <img src="{{ $signaturePath }}" alt="Tanda Tangan" class="signature-image">
-            @elseif(file_exists($signatureSvgPath))
-                {!! file_get_contents($signatureSvgPath) !!}
             @else
                 <div class="signature-placeholder">Signed electronically</div>
             @endif
