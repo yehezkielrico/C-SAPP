@@ -18,7 +18,8 @@ return [
     |
     */
 
-    'driver' => env('SESSION_DRIVER', 'database'),
+    // Force database driver so session tetap konsisten di environment seperti Vercel
+    'driver' => 'database',
 
     /*
     |--------------------------------------------------------------------------
