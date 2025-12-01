@@ -401,10 +401,13 @@
 </head>
 <body>
     @php
-        $canRenderImages = extension_loaded('gd');
-        $logoPath = public_path('storage/images/LOGO.png');
-        $sealPath = public_path('storage/images/cap.png');
-        $signaturePath = public_path('storage/images/signature.png');
+        $canRenderImages   = extension_loaded('gd');
+        $logoPath          = public_path('storage/images/LOGO.png');
+        $sealPath          = public_path('storage/images/cap.png');
+        $signaturePath     = public_path('storage/images/signature.png');
+        $logoSvgPath       = public_path('storage/images/LOGO.svg');
+        $sealSvgPath       = public_path('storage/images/cap.svg');
+        $signatureSvgPath  = public_path('storage/images/signature.svg');
     @endphp
     <div class="certificate">
         <div class="border-outer"></div>
@@ -421,7 +424,9 @@
             <div class="header">
                 <div class="logo-section">
                 <div class="logo">
-                        @if($canRenderImages && file_exists($logoPath))
+                        @if(file_exists($logoSvgPath))
+                            {!! file_get_contents($logoSvgPath) !!}
+                        @elseif($canRenderImages && file_exists($logoPath))
                             <img src="{{ $logoPath }}" alt="Logo">
                         @else
                             <div class="logo-text">CS</div>
@@ -471,14 +476,18 @@
         </div>
         
         <div class="seal">
-            @if($canRenderImages && file_exists($sealPath))
+            @if(file_exists($sealSvgPath))
+                {!! file_get_contents($sealSvgPath) !!}
+            @elseif($canRenderImages && file_exists($sealPath))
                 <img src="{{ $sealPath }}" alt="Cap" class="seal-image">
             @endif
             <div class="seal-text">OFFICIAL<br>SEAL</div>
         </div>
         
         <div class="signature-section">
-            @if($canRenderImages && file_exists($signaturePath))
+            @if(file_exists($signatureSvgPath))
+                {!! file_get_contents($signatureSvgPath) !!}
+            @elseif($canRenderImages && file_exists($signaturePath))
                 <img src="{{ $signaturePath }}" alt="Tanda Tangan" class="signature-image">
             @else
                 <div class="signature-placeholder">Signed electronically</div>
