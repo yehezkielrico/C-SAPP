@@ -18,14 +18,14 @@ class Survey extends Model
         'options',
         'is_published',
         'is_anonymous',
-        'created_by'
+        'created_by',
     ];
 
     protected $casts = [
         'questions' => 'array',
         'options' => 'array',
         'is_published' => 'boolean',
-        'is_anonymous' => 'boolean'
+        'is_anonymous' => 'boolean',
     ];
 
     public function creator()
@@ -55,4 +55,4 @@ class Survey extends Model
             ->groupBy('answers')
             ->get();
     }
-} 
+}

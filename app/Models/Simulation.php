@@ -19,14 +19,14 @@ class Simulation extends Model
         'correct_answers',
         'type',
         'is_published',
-        'created_by'
+        'created_by',
     ];
 
     protected $casts = [
         'steps' => 'array',
         'options' => 'array',
         'correct_answers' => 'array',
-        'is_published' => 'boolean'
+        'is_published' => 'boolean',
     ];
 
     public function creator()
@@ -41,7 +41,7 @@ class Simulation extends Model
 
     public function getLatestResult($userId = null)
     {
-        if (!$userId) {
+        if (! $userId) {
             $userId = auth()->id();
         }
 
@@ -53,7 +53,7 @@ class Simulation extends Model
 
     public function getAverageScore($userId = null)
     {
-        if (!$userId) {
+        if (! $userId) {
             $userId = auth()->id();
         }
 
@@ -61,4 +61,4 @@ class Simulation extends Model
             ->where('user_id', $userId)
             ->avg('score') ?? 0;
     }
-} 
+}

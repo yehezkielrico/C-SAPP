@@ -24,7 +24,7 @@ class SimulationController extends Controller
 
     public function show(Simulation $simulation)
     {
-        if (!$simulation->is_published) {
+        if (! $simulation->is_published) {
             return redirect()->route('simulations.index')
                 ->with('error', 'Simulasi ini belum dipublikasikan.');
         }
@@ -36,7 +36,7 @@ class SimulationController extends Controller
 
     public function start(Simulation $simulation)
     {
-        if (!$simulation->is_published) {
+        if (! $simulation->is_published) {
             return redirect()->route('simulations.index')
                 ->with('error', 'Simulasi ini belum dipublikasikan.');
         }
@@ -48,7 +48,7 @@ class SimulationController extends Controller
     {
         $request->validate([
             'answers' => 'required|array',
-            'answers.*' => 'required|string'
+            'answers.*' => 'required|string',
         ]);
 
         $userAnswers = $request->answers;
@@ -60,8 +60,8 @@ class SimulationController extends Controller
         $feedback = [];
 
         foreach ($steps as $index => $step) {
-            $userAnswerIdx = isset($userAnswers[$index]) ? (int)$userAnswers[$index] : null;
-            $correctAnswerIdx = isset($correctAnswers[$index]) ? (int)$correctAnswers[$index] : null;
+            $userAnswerIdx = isset($userAnswers[$index]) ? (int) $userAnswers[$index] : null;
+            $correctAnswerIdx = isset($correctAnswers[$index]) ? (int) $correctAnswers[$index] : null;
             $userAnswerText = isset($options[$index][$userAnswerIdx]) ? $options[$index][$userAnswerIdx] : null;
             $correctAnswerText = isset($options[$index][$correctAnswerIdx]) ? $options[$index][$correctAnswerIdx] : null;
 
@@ -73,7 +73,7 @@ class SimulationController extends Controller
                 'step' => $step,
                 'user_answer' => $userAnswerText,
                 'correct_answer' => $correctAnswerText,
-                'is_correct' => $userAnswerIdx === $correctAnswerIdx
+                'is_correct' => $userAnswerIdx === $correctAnswerIdx,
             ];
         }
 
@@ -83,7 +83,7 @@ class SimulationController extends Controller
             'user_answers' => $userAnswers,
             'score' => round($score),
             'feedback' => json_encode($feedback),
-            'completed_at' => now()
+            'completed_at' => now(),
         ]);
 
         return redirect()->route('simulations.result', $result)
@@ -99,4 +99,4 @@ class SimulationController extends Controller
 
         return view('simulations.result', compact('result'));
     }
-} 
+}

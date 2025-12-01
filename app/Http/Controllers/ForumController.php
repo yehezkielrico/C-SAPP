@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ForumTopic;
 use App\Models\ForumReply;
+use App\Models\ForumTopic;
 use Illuminate\Http\Request;
 
 class ForumController extends Controller
@@ -13,7 +13,7 @@ class ForumController extends Controller
         $topics = ForumTopic::with(['user', 'replies'])
             ->latest()
             ->paginate(10);
-            
+
         return view('forum.index', compact('topics'));
     }
 
@@ -21,7 +21,7 @@ class ForumController extends Controller
     {
         $topic->incrementViews();
         $replies = $topic->replies()->with('user')->latest()->get();
-        
+
         return view('forum.show', compact('topic', 'replies'));
     }
 
@@ -34,13 +34,13 @@ class ForumController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|max:255',
-            'content' => 'required'
+            'content' => 'required',
         ]);
 
         $topic = ForumTopic::create([
             'user_id' => auth()->id(),
             'title' => $validated['title'],
-            'content' => $validated['content']
+            'content' => $validated['content'],
         ]);
 
         return redirect()->route('forum.show', $topic)
@@ -50,13 +50,13 @@ class ForumController extends Controller
     public function reply(Request $request, ForumTopic $topic)
     {
         $validated = $request->validate([
-            'content' => 'required'
+            'content' => 'required',
         ]);
 
         $reply = ForumReply::create([
             'topic_id' => $topic->id,
             'user_id' => auth()->id(),
-            'content' => $validated['content']
+            'content' => $validated['content'],
         ]);
 
         return redirect()->route('forum.show', $topic)
@@ -66,9 +66,9 @@ class ForumController extends Controller
     public function markAsSolution(ForumReply $reply)
     {
         $this->authorize('markAsSolution', $reply);
-        
+
         $reply->markAsSolution();
-        
+
         return redirect()->route('forum.show', $reply->topic)
             ->with('success', 'Balasan ditandai sebagai solusi!');
     }

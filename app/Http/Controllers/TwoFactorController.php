@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use PragmaRX\Google2FA\Google2FA;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use App\Providers\RouteServiceProvider;
+use PragmaRX\Google2FA\Google2FA;
 
 class TwoFactorController extends Controller
 {
@@ -29,7 +27,7 @@ class TwoFactorController extends Controller
 
         return view('2fa.index', [
             'secretKey' => $secretKey,
-            'qrCodeUrl' => $qrCodeUrl
+            'qrCodeUrl' => $qrCodeUrl,
         ]);
     }
 
@@ -56,7 +54,7 @@ class TwoFactorController extends Controller
 
     public function verify()
     {
-        if (!session()->has('2fa_user_id')) {
+        if (! session()->has('2fa_user_id')) {
             return redirect()->route('login');
         }
 
@@ -72,7 +70,7 @@ class TwoFactorController extends Controller
         $userId = session()->get('2fa_user_id');
         $user = \App\Models\User::find($userId);
 
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('login');
         }
 
@@ -82,11 +80,11 @@ class TwoFactorController extends Controller
             Auth::login($user);
             session()->forget('2fa_user_id');
             session(['2fa_verified' => true]);
-            
+
             if ($user->is_admin) {
                 return redirect()->intended(route('admin.dashboard'));
             }
-            
+
             return redirect()->intended(route('dashboard'));
         }
 

@@ -20,7 +20,7 @@ class SocialAuthController extends Controller
         }
 
         // Lazy-load Socialite to avoid class errors when package missing
-        if (!class_exists(\Laravel\Socialite\Facades\Socialite::class)) {
+        if (! class_exists(\Laravel\Socialite\Facades\Socialite::class)) {
             abort(500, 'Socialite package not installed. Run composer require laravel/socialite.');
         }
 
@@ -33,7 +33,7 @@ class SocialAuthController extends Controller
             abort(404);
         }
 
-        if (!class_exists(\Laravel\Socialite\Facades\Socialite::class)) {
+        if (! class_exists(\Laravel\Socialite\Facades\Socialite::class)) {
             abort(500, 'Socialite package not installed. Run composer require laravel/socialite.');
         }
 
@@ -46,15 +46,15 @@ class SocialAuthController extends Controller
         // Prefer to find by provider + provider_id first
         $user = User::where('provider', 'google')->where('provider_id', $socialUser->getId())->first();
 
-        if (!$user) {
+        if (! $user) {
             // If not found by provider id, try by email
             $user = User::where('email', $socialUser->getEmail())->first();
         }
 
-        if (!$user) {
+        if (! $user) {
             // create user -- use a random password (hashed by model)
             $user = User::create([
-                'name' => $socialUser->getName() ?? $socialUser->getNickname() ?? 'User ' . Str::random(4),
+                'name' => $socialUser->getName() ?? $socialUser->getNickname() ?? 'User '.Str::random(4),
                 'email' => $socialUser->getEmail(),
                 // password will be cast to hashed by model
                 'password' => Str::random(32),
@@ -75,7 +75,7 @@ class SocialAuthController extends Controller
                 $updates['email_verified_at'] = now();
             }
 
-            if (!empty($updates)) {
+            if (! empty($updates)) {
                 $user->update($updates);
                 // reload fresh instance
                 $user->refresh();

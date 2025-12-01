@@ -27,7 +27,7 @@ class ModuleSeeder extends Seeder
                 'title' => 'Fundamental Keamanan Siber',
                 'subtitle' => 'Konsep inti dan mindset defender modern',
                 'description' => 'Mengenalkan prinsip dasar keamanan informasi, model CIA triad, dan peran tiap tim dalam menahan serangan siber.',
-                'content' => <<<HTML
+                'content' => <<<'HTML'
 <p>Modul pengantar ini membantu peserta membangun fondasi kuat seputar konsep keamanan informasi.</p>
 <ul>
     <li>Memahami hubungan antara aset bisnis, ancaman, dan kerentanan.</li>
@@ -59,7 +59,7 @@ HTML,
                 'title' => 'Keamanan Jaringan & Monitoring',
                 'subtitle' => 'Menjaga lalu lintas data tetap aman',
                 'description' => 'Fokus pada segmentasi jaringan, hardening perangkat, dan analitik traffic menggunakan alat open-source.',
-                'content' => <<<HTML
+                'content' => <<<'HTML'
 <p>Peserta mempelajari cara merancang arsitektur jaringan yang resilien serta mengoperasikan sensor monitoring.</p>
 <ol>
     <li>Desain segmentasi dan kontrol akses berbasis zona.</li>
@@ -91,7 +91,7 @@ HTML,
                 'title' => 'Keamanan Aplikasi Web',
                 'subtitle' => 'Menutup celah OWASP Top 10 secara praktis',
                 'description' => 'Membahas kerentanan umum web beserta mitigasinya dengan studi kasus framework populer.',
-                'content' => <<<HTML
+                'content' => <<<'HTML'
 <p>Modul ini dipenuhi demo eksploitasi dan patching sehingga developer memahami dampak langsung terhadap pengguna.</p>
 <ul>
     <li>Walkthrough OWASP Top 10 terbaru.</li>
@@ -123,7 +123,7 @@ HTML,
                 'title' => 'Penetration Testing Terstruktur',
                 'subtitle' => 'Dari reconnaissance hingga reporting',
                 'description' => 'Memberikan panduan langkah demi langkah menjalankan pentest internal maupun eksternal yang etis.',
-                'content' => <<<HTML
+                'content' => <<<'HTML'
 <p>Peserta mempraktekkan metodologi OSSTMM/PTES sambil mendokumentasikan temuan dengan skor risiko yang jelas.</p>
 <ol>
     <li>Perencanaan engagement dan aturan main.</li>
@@ -155,7 +155,7 @@ HTML,
                 'title' => 'Incident Response & Forensik Digital',
                 'subtitle' => 'Meminimalkan dampak insiden dengan prosedur yang jelas',
                 'description' => 'Melatih tim untuk mendeteksi, menahan, dan memulihkan insiden siber sambil mengumpulkan bukti forensik.',
-                'content' => <<<HTML
+                'content' => <<<'HTML'
 <p>Modul ini menggabungkan teori IR lifecycle dengan simulasi tabletop agar organisasi siap menghadapi serangan nyata.</p>
 <ul>
     <li>Penyusunan playbook respon insiden.</li>
@@ -217,4 +217,3 @@ HTML,
         }
     }
 }
-

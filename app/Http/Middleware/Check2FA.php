@@ -21,7 +21,7 @@ class Check2FA
         }
 
         if (auth()->check() && auth()->user()->google2fa_enabled) {
-            if (!$request->session()->has('2fa_verified')) {
+            if (! $request->session()->has('2fa_verified')) {
                 return redirect()->route('2fa.verify');
             }
         }

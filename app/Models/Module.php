@@ -20,7 +20,7 @@ class Module extends Model
         'order',
         'has_quiz',
         'is_published',
-        'created_by'
+        'created_by',
     ];
 
     protected $casts = [
@@ -57,7 +57,7 @@ class Module extends Model
 
     public function isCompletedByUser($userId = null)
     {
-        if (!$userId) {
+        if (! $userId) {
             $userId = auth()->id();
         }
 
@@ -69,7 +69,7 @@ class Module extends Model
 
     public function getQuizStats($userId = null)
     {
-        if (!$userId) {
+        if (! $userId) {
             $userId = auth()->id();
         }
 
@@ -77,12 +77,12 @@ class Module extends Model
             ->where('module_id', $this->id)
             ->first();
 
-        if (!$result) {
+        if (! $result) {
             return [
                 'score' => 0,
                 'correct_answers' => 0,
                 'total_questions' => $this->quizzes()->count(),
-                'completed_at' => null
+                'completed_at' => null,
             ];
         }
 
@@ -90,7 +90,7 @@ class Module extends Model
             'score' => $result->score,
             'correct_answers' => $result->correct_answers,
             'total_questions' => $result->total_questions,
-            'completed_at' => $result->completed_at
+            'completed_at' => $result->completed_at,
         ];
     }
-} 
+}

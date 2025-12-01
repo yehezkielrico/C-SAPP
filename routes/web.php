@@ -1,24 +1,24 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\MaterialController;
-use App\Http\Controllers\QuizController;
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ModuleController;
 use App\Http\Controllers\Admin\QuizController as AdminQuizController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\ForumController;
-use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\Admin\SimulationController as AdminSimulationController;
 use App\Http\Controllers\Admin\SubtitleController;
-use App\Http\Controllers\TwoFactorController;
-use App\Http\Controllers\NotificationPreferenceController;
+use App\Http\Controllers\Admin\SurveyController as AdminSurveyController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ForumController;
+use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\NotificationPreferenceController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QuizController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SimulationController;
 use App\Http\Controllers\SurveyController;
-use App\Http\Controllers\Admin\SimulationController as AdminSimulationController;
-use App\Http\Controllers\Admin\SurveyController as AdminSurveyController;
+use App\Http\Controllers\TwoFactorController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -36,13 +36,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/materials/module/{module}', [MaterialController::class, 'showModule'])->name('materials.module');
     Route::post('/materials/module/{module}/complete', [MaterialController::class, 'completeModule'])->name('materials.complete');
     Route::post('/materials/{module}/track-time', [MaterialController::class, 'trackTime'])->name('materials.track-time');
-    
+
     // Quiz routes - fixed order
     Route::get('/quizzes', [QuizController::class, 'index'])->name('quizzes');
     Route::get('/quizzes/result', [QuizController::class, 'result'])->name('quizzes.result');
     Route::post('/quizzes/submit', [QuizController::class, 'submit'])->name('quizzes.submit');
     Route::get('/quizzes/{id}', [QuizController::class, 'show'])->name('quizzes.show');
-    
+
     Route::get('/reports', [ReportController::class, 'index'])->name('reports');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -107,17 +107,17 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-    
+
     // Module routes
     Route::resource('modules', ModuleController::class);
     Route::resource('modules.subtitles', SubtitleController::class);
-    
+
     // Quiz routes
     Route::resource('quizzes', AdminQuizController::class);
-    
+
     // Simulation routes
     Route::resource('simulations', AdminSimulationController::class);
-    
+
     // Survey routes
     Route::resource('surveys', AdminSurveyController::class);
 });

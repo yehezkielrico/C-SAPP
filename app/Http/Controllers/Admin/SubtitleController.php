@@ -16,6 +16,7 @@ class SubtitleController extends Controller
     public function index(Module $module)
     {
         $subtitles = $module->subtitles()->paginate(10);
+
         return view('admin.subtitles.index', compact('module', 'subtitles'));
     }
 
@@ -36,7 +37,7 @@ class SubtitleController extends Controller
             // Log incoming request data
             Log::info('Creating subtitle with data:', [
                 'request_data' => $request->all(),
-                'module_id' => $module->id
+                'module_id' => $module->id,
             ]);
 
             $validated = $request->validate([
@@ -44,11 +45,11 @@ class SubtitleController extends Controller
                 'description' => 'nullable|string',
                 'order' => 'required|integer|min:0',
                 'is_published' => 'required|boolean',
-                'youtube_url' => 'nullable|url|max:255'
+                'youtube_url' => 'nullable|url|max:255',
             ]);
 
             Log::info('Validated data:', [
-                'validated' => $validated
+                'validated' => $validated,
             ]);
 
             $subtitle = new Subtitle($validated);
@@ -56,7 +57,7 @@ class SubtitleController extends Controller
             $subtitle->save();
 
             Log::info('Subtitle created successfully', [
-                'subtitle_id' => $subtitle->id
+                'subtitle_id' => $subtitle->id,
             ]);
 
             return redirect()
@@ -65,14 +66,14 @@ class SubtitleController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('Subtitle validation failed', [
                 'errors' => $e->errors(),
-                'request_data' => $request->all()
+                'request_data' => $request->all(),
             ]);
             throw $e;
         } catch (\Exception $e) {
             Log::error('Subtitle creation failed', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
-                'request_data' => $request->all()
+                'request_data' => $request->all(),
             ]);
 
             return back()
@@ -97,6 +98,7 @@ class SubtitleController extends Controller
         if ($subtitle->module_id !== $module->id) {
             abort(404);
         }
+
         return view('admin.subtitles.edit', compact('module', 'subtitle'));
     }
 
@@ -115,7 +117,7 @@ class SubtitleController extends Controller
                 'description' => 'nullable|string',
                 'order' => 'required|integer|min:0',
                 'is_published' => 'required|boolean',
-                'youtube_url' => 'nullable|url|max:255'
+                'youtube_url' => 'nullable|url|max:255',
             ]);
 
             $subtitle->update($validated);
@@ -126,7 +128,7 @@ class SubtitleController extends Controller
         } catch (\Exception $e) {
             Log::error('Subtitle update failed', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return back()
@@ -153,7 +155,7 @@ class SubtitleController extends Controller
         } catch (\Exception $e) {
             Log::error('Subtitle deletion failed', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return back()

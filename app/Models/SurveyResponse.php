@@ -13,11 +13,11 @@ class SurveyResponse extends Model
         'survey_id',
         'user_id',
         'answers',
-        'feedback'
+        'feedback',
     ];
 
     protected $casts = [
-        'answers' => 'array'
+        'answers' => 'array',
     ];
 
     public function survey()
@@ -29,4 +29,4 @@ class SurveyResponse extends Model
     {
         return $this->belongsTo(User::class);
     }
-} 
+}

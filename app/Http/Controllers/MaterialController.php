@@ -16,7 +16,7 @@ class MaterialController extends Controller
         $modules = Module::where('is_published', true)
             ->orderBy('created_at', 'desc')
             ->get();
-        
+
         // Total modul
         $totalModulesCount = $modules->count();
         // Modul selesai oleh user
@@ -62,11 +62,11 @@ class MaterialController extends Controller
         $modules = Module::where('is_published', true)
             ->orderBy('created_at', 'asc')
             ->get();
-            
-        $currentIndex = $modules->search(function($item) use ($module) {
+
+        $currentIndex = $modules->search(function ($item) use ($module) {
             return $item->id === $module->id;
         });
-        
+
         $previousModule = $currentIndex > 0 ? $modules[$currentIndex - 1] : null;
         $nextModule = $currentIndex < $modules->count() - 1 ? $modules[$currentIndex + 1] : null;
 
@@ -104,7 +104,7 @@ class MaterialController extends Controller
                 'module_id' => $module->id,
             ],
             [
-                'time_spent' => DB::raw('COALESCE(time_spent, 0) + ' . $timeSpent),
+                'time_spent' => DB::raw('COALESCE(time_spent, 0) + '.$timeSpent),
             ]
         );
 
@@ -115,4 +115,4 @@ class MaterialController extends Controller
 
         return response()->json(['success' => true, 'time_spent' => $progress?->time_spent ?? 0]);
     }
-} 
+}

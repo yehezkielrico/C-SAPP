@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Certificate;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CertificateController extends Controller
@@ -37,10 +36,10 @@ class CertificateController extends Controller
 
         // Generate PDF certificate
         $pdf = \PDF::loadView('certificates.pdf', compact('certificate'));
-        
+
         // Create a safe filename by replacing '/' with '-'
-        $filename = 'certificate-' . str_replace('/', '-', $certificate->certificate_number) . '.pdf';
-        
+        $filename = 'certificate-'.str_replace('/', '-', $certificate->certificate_number).'.pdf';
+
         return $pdf->download($filename);
     }
-} 
+}

@@ -19,8 +19,8 @@
                         </div>
                     </div>
                 </div>
-                <h2 class="text-2xl font-bold text-white">Setup Two Factor Authentication</h2>
-                <p class="mt-2 text-gray-400">Secure your account with an extra layer of protection</p>
+                <h2 class="text-2xl font-bold text-white">Aktifkan Two Factor Authentication</h2>
+                <p class="mt-2 text-gray-400">Amankan akun Anda dengan lapisan perlindungan tambahan</p>
             </div>
         </div>
 
@@ -31,7 +31,7 @@
             </div>
             <div class="relative bg-[#1A2333]/30 backdrop-blur-sm rounded-xl border border-gray-800 p-6">
                 <div class="text-center">
-                    <p class="text-gray-300 mb-4">Scan this QR code with your authenticator app:</p>
+                    <p class="text-gray-300 mb-4">Pindai kode QR berikut dengan aplikasi autentikator Anda:</p>
                     <div class="inline-block p-4 bg-white rounded-lg">
                         {!! QrCode::size(200)->generate($qrCodeUrl) !!}
                     </div>
@@ -45,7 +45,7 @@
                 <div class="w-full h-full mx-auto opacity-20 blur-lg filter bg-gradient-to-r from-blue-600 to-blue-500"></div>
             </div>
             <div class="relative bg-[#1A2333]/30 backdrop-blur-sm rounded-xl border border-gray-800 p-6">
-                <p class="text-gray-300 mb-4">Or enter this secret key manually:</p>
+                <p class="text-gray-300 mb-4">Atau masukkan secret key berikut secara manual:</p>
                 <div class="relative">
                     <div class="absolute -inset-1 opacity-20 blur-lg filter bg-gradient-to-r from-blue-600 to-blue-500"></div>
                     <div class="relative bg-[#1A2333]/50 p-4 rounded-lg border border-gray-700">
@@ -66,7 +66,7 @@
                     <input type="hidden" name="secret" value="{{ $secretKey }}">
                     
                     <div class="mb-6">
-                        <label for="code" class="block text-sm font-medium text-gray-300 mb-2">Verification Code</label>
+                        <label for="code" class="block text-sm font-medium text-gray-300 mb-2">Kode Verifikasi</label>
                         <div class="relative">
                             <div class="absolute -inset-1 opacity-0 group-focus-within:opacity-30 blur-lg filter bg-gradient-to-r from-blue-600 to-blue-500 transition-opacity duration-200"></div>
                             <input id="code" 
@@ -92,7 +92,7 @@
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                 </svg>
-                                Enable 2FA
+                                Aktifkan 2FA
                             </span>
                         </button>
                     </div>

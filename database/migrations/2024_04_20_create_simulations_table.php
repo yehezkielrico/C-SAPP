@@ -39,4 +39,4 @@ return new class extends Migration
         Schema::dropIfExists('simulation_results');
         Schema::dropIfExists('simulations');
     }
-}; 
+};

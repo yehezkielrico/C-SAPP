@@ -25,4 +25,4 @@ return new class extends Migration
             $table->dropColumn('last_login_at');
         });
     }
-}; 
+};

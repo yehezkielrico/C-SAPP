@@ -45,7 +45,7 @@ return new class extends Migration
             $table->integer('quiz_score')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();
-            
+
             // Ensure one record per user per module
             $table->unique(['user_id', 'module_id']);
         });
@@ -66,4 +66,4 @@ return new class extends Migration
         Schema::dropIfExists('quizzes');
         Schema::dropIfExists('modules');
     }
-}; 
+};

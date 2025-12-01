@@ -14,11 +14,11 @@ class ForumReply extends Model
         'topic_id',
         'user_id',
         'content',
-        'is_solution'
+        'is_solution',
     ];
 
     protected $casts = [
-        'is_solution' => 'boolean'
+        'is_solution' => 'boolean',
     ];
 
     public function topic(): BelongsTo
@@ -35,8 +35,8 @@ class ForumReply extends Model
     {
         // Unmark any existing solution
         $this->topic->replies()->where('is_solution', true)->update(['is_solution' => false]);
-        
+
         // Mark this reply as solution
         $this->update(['is_solution' => true]);
     }
-} 
+}

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +25,7 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         \Log::info('Login attempt', ['email' => $request->email]);
-        
+
         try {
             $request->authenticate();
             \Log::info('Authentication successful');
@@ -37,7 +36,7 @@ class AuthenticatedSessionController extends Controller
             $user = Auth::user();
             \Log::info('User retrieved', [
                 'user_id' => $user->id,
-                '2fa_enabled' => $user->google2fa_enabled
+                '2fa_enabled' => $user->google2fa_enabled,
             ]);
 
             if ($user->google2fa_enabled) {
@@ -46,22 +45,25 @@ class AuthenticatedSessionController extends Controller
                 $request->session()->put('2fa_user_id', $user->id);
                 \Log::info('2FA user ID stored in session', [
                     '2fa_user_id' => session('2fa_user_id'),
-                    'session_id' => session()->getId()
+                    'session_id' => session()->getId(),
                 ]);
+
                 return redirect()->route('2fa.verify');
             }
 
             if (auth()->user()->is_admin) {
                 \Log::info('Admin user, redirecting to admin dashboard');
+
                 return redirect()->intended(route('admin.dashboard', absolute: false));
             }
 
             \Log::info('Regular user, redirecting to dashboard');
+
             return redirect()->intended(route('dashboard', absolute: false));
         } catch (\Exception $e) {
             \Log::error('Login error', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
             throw $e;
         }

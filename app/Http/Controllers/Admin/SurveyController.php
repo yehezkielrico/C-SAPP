@@ -14,7 +14,7 @@ class SurveyController extends Controller
         $surveys = Survey::with('creator')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-            
+
         return view('admin.surveys.index', compact('surveys'));
     }
 
@@ -35,7 +35,7 @@ class SurveyController extends Controller
             'options.*.value' => 'required|string',
             'options.*.text' => 'required|string',
             'is_published' => 'required|boolean',
-            'is_anonymous' => 'required|boolean'
+            'is_anonymous' => 'required|boolean',
         ]);
 
         Survey::create([
@@ -46,7 +46,7 @@ class SurveyController extends Controller
             'options' => $request->options,
             'is_published' => $request->is_published,
             'is_anonymous' => $request->is_anonymous,
-            'created_by' => Auth::id()
+            'created_by' => Auth::id(),
         ]);
 
         return redirect()->route('admin.surveys.index')
@@ -70,7 +70,7 @@ class SurveyController extends Controller
             'options.*.value' => 'required|string',
             'options.*.text' => 'required|string',
             'is_published' => 'required|boolean',
-            'is_anonymous' => 'required|boolean'
+            'is_anonymous' => 'required|boolean',
         ]);
 
         $survey->update([
@@ -80,7 +80,7 @@ class SurveyController extends Controller
             'questions' => $request->questions,
             'options' => $request->options,
             'is_published' => $request->is_published,
-            'is_anonymous' => $request->is_anonymous
+            'is_anonymous' => $request->is_anonymous,
         ]);
 
         return redirect()->route('admin.surveys.index')
@@ -94,4 +94,4 @@ class SurveyController extends Controller
         return redirect()->route('admin.surveys.index')
             ->with('success', 'Survei berhasil dihapus!');
     }
-} 
+}

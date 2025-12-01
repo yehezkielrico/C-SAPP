@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\NotificationController;
 use App\Models\Module;
 use App\Models\User;
-use App\Http\Controllers\NotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -15,6 +15,7 @@ class ModuleController extends Controller
     public function index()
     {
         $modules = Module::orderBy('order')->paginate(10);
+
         return view('admin.modules.index', compact('modules'));
     }
 
@@ -32,7 +33,7 @@ class ModuleController extends Controller
                 'is_published_input' => $request->input('is_published'),
                 'has_is_published' => $request->has('is_published'),
                 'boolean_is_published' => $request->boolean('is_published'),
-                'checkbox_checked' => $request->has('is_published') && $request->input('is_published') == '1'
+                'checkbox_checked' => $request->has('is_published') && $request->input('is_published') == '1',
             ]);
 
             $validated = $request->validate([
@@ -41,24 +42,24 @@ class ModuleController extends Controller
                 'description' => 'required|string',
                 'content' => 'required|string',
                 'youtube_url' => 'nullable|url|max:255',
-                'is_published' => 'required|in:0,1'
+                'is_published' => 'required|in:0,1',
             ]);
 
             // Create module with validated data
-            $module = new Module();
+            $module = new Module;
             $module->fill($validated);
             $module->created_by = Auth::id();
-            
+
             Log::info('Creating module with data:', [
-                'validated' => $validated
+                'validated' => $validated,
             ]);
-            
+
             $module->save();
 
             // Send notifications if module is published
             if ($module->is_published) {
                 // Get all users who have enabled new materials notifications
-                $users = User::whereHas('notificationPreference', function($query) {
+                $users = User::whereHas('notificationPreference', function ($query) {
                     $query->where('new_materials', true);
                 })->get();
 
@@ -71,17 +72,18 @@ class ModuleController extends Controller
                         [
                             'module_id' => $module->id,
                             'module_title' => $module->title,
-                            'module_subtitle' => $module->subtitle
+                            'module_subtitle' => $module->subtitle,
                         ]
                     );
                 }
             }
 
             Log::info('Module created successfully', [
-                'module_id' => $module->id
+                'module_id' => $module->id,
             ]);
 
             $status = $module->is_published ? 'dipublikasikan' : 'disimpan sebagai draft';
+
             return redirect()
                 ->route('admin.modules.index')
                 ->with('success', "Modul berhasil {$status}.");
@@ -89,7 +91,7 @@ class ModuleController extends Controller
             Log::error('Module creation failed', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
-                'request_data' => $request->all()
+                'request_data' => $request->all(),
             ]);
 
             return back()
@@ -113,7 +115,7 @@ class ModuleController extends Controller
                 'has_is_published' => $request->has('is_published'),
                 'boolean_is_published' => $request->boolean('is_published'),
                 'checkbox_checked' => $request->has('is_published') && $request->input('is_published') == '1',
-                'youtube_url' => $request->input('youtube_url')
+                'youtube_url' => $request->input('youtube_url'),
             ]);
 
             $validated = $request->validate([
@@ -122,29 +124,30 @@ class ModuleController extends Controller
                 'description' => 'required|string',
                 'content' => 'required|string',
                 'youtube_url' => 'nullable|url|max:255',
-                'is_published' => 'required|in:0,1'
+                'is_published' => 'required|in:0,1',
             ]);
 
             // Update module with validated data
             $module->fill($validated);
-            
+
             Log::info('Module before update:', [
                 'id' => $module->id,
-                'is_published' => $module->is_published
+                'is_published' => $module->is_published,
             ]);
 
             // Save changes
             $module->save();
-            
+
             Log::info('Module after update:', [
                 'id' => $module->id,
                 'is_published' => $module->is_published,
                 'fresh_is_published' => $module->fresh()->is_published,
                 'youtube_url' => $module->youtube_url,
-                'fresh_youtube_url' => $module->fresh()->youtube_url
+                'fresh_youtube_url' => $module->fresh()->youtube_url,
             ]);
 
             $status = $module->is_published ? 'dipublikasikan' : 'disimpan sebagai draft';
+
             return redirect()
                 ->route('admin.modules.index')
                 ->with('success', "Modul berhasil {$status}.");
@@ -152,7 +155,7 @@ class ModuleController extends Controller
             Log::error('Module update failed', [
                 'module_id' => $module->id,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return back()
@@ -172,10 +175,10 @@ class ModuleController extends Controller
         } catch (\Exception $e) {
             Log::error('Module deletion failed', [
                 'module_id' => $module->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return back()->withErrors(['error' => 'Gagal menghapus modul.']);
         }
     }
-} 
+}

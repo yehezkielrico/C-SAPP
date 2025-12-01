@@ -12,13 +12,13 @@ class Notification extends Model
         'message',
         'data',
         'read',
-        'read_at'
+        'read_at',
     ];
 
     protected $casts = [
         'data' => 'array',
         'read' => 'boolean',
-        'read_at' => 'datetime'
+        'read_at' => 'datetime',
     ];
 
     public function user()
@@ -30,7 +30,7 @@ class Notification extends Model
     {
         $this->update([
             'read' => true,
-            'read_at' => now()
+            'read_at' => now(),
         ]);
     }
-} 
+}

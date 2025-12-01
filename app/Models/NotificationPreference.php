@@ -12,7 +12,7 @@ class NotificationPreference extends Model
         'new_materials',
         'quiz_reminders',
         'security_alerts',
-        'frequency'
+        'frequency',
     ];
 
     public function user()

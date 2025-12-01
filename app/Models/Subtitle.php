@@ -15,11 +15,11 @@ class Subtitle extends Model
         'description',
         'order',
         'is_published',
-        'youtube_url'
+        'youtube_url',
     ];
 
     protected $casts = [
-        'is_published' => 'boolean'
+        'is_published' => 'boolean',
     ];
 
     public function module()

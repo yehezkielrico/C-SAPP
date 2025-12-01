@@ -221,7 +221,7 @@ class QuizSeeder extends Seeder
         foreach ($quizBlueprints as $moduleTitle => $quizData) {
             $module = Module::where('title', $moduleTitle)->first();
 
-            if (!$module) {
+            if (! $module) {
                 continue;
             }
 
@@ -248,4 +248,3 @@ class QuizSeeder extends Seeder
         }
     }
 }
-

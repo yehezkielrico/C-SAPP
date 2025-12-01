@@ -23,7 +23,7 @@ class ForumTopic extends Model
     protected $casts = [
         'is_pinned' => 'boolean',
         'is_locked' => 'boolean',
-        'views'     => 'integer',
+        'views' => 'integer',
     ];
 
     public function user(): BelongsTo

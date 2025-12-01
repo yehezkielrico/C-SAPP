@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Notification;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
@@ -21,6 +20,7 @@ class NotificationController extends Controller
     public function markAsRead(Notification $notification)
     {
         $notification->markAsRead();
+
         return back();
     }
 
@@ -30,7 +30,7 @@ class NotificationController extends Controller
             ->where('read', false)
             ->update([
                 'read' => true,
-                'read_at' => now()
+                'read_at' => now(),
             ]);
 
         return back();
@@ -39,12 +39,12 @@ class NotificationController extends Controller
     public static function sendNotification(User $user, string $type, string $message, array $data = [])
     {
         $preference = $user->notificationPreference;
-        
-        if (!$preference) {
+
+        if (! $preference) {
             return;
         }
 
-        $shouldNotify = match($type) {
+        $shouldNotify = match ($type) {
             'progress' => $preference->progress_updates,
             'materials' => $preference->new_materials,
             'quizzes' => $preference->quiz_reminders,
@@ -56,7 +56,7 @@ class NotificationController extends Controller
             $user->notifications()->create([
                 'type' => $type,
                 'message' => $message,
-                'data' => $data
+                'data' => $data,
             ]);
         }
     }

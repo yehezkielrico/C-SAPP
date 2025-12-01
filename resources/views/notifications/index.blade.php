@@ -6,15 +6,15 @@
         <div class="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl shadow-lg p-6">
             <div class="flex items-center justify-between mb-6">
                 <div>
-                    <h2 class="text-xl font-semibold text-white">{{ __('Notifications') }}</h2>
-                    <p class="text-sm text-gray-400">{{ __('Your recent notifications') }}</p>
+                    <h2 class="text-xl font-semibold text-white">Notifikasi</h2>
+                    <p class="text-sm text-gray-400">Ringkasan aktivitas terbaru Anda</p>
                 </div>
                 @if($notifications->isNotEmpty())
                 <form method="POST" action="{{ route('notifications.markAllAsRead') }}" class="flex">
                     @csrf
                     @method('PATCH')
                     <button type="submit" class="text-sm text-blue-400 hover:text-blue-300">
-                        {{ __('Mark all as read') }}
+                        Tandai semua sudah dibaca
                     </button>
                 </form>
                 @endif
@@ -24,8 +24,8 @@
                 <div class="text-center py-8">
                     <div class="text-gray-400">
                         <i class="fas fa-bell-slash text-4xl mb-4"></i>
-                        <p class="text-lg">{{ __('No notifications yet') }}</p>
-                        <p class="text-sm text-gray-500">{{ __('When you get notifications, they will appear here') }}</p>
+                        <p class="text-lg">Belum ada notifikasi</p>
+                        <p class="text-sm text-gray-500">Saat ada informasi penting, notifikasi akan muncul di sini</p>
                     </div>
                 </div>
             @else
@@ -43,6 +43,9 @@
                             </div>
                             <div class="flex-grow">
                                 <p class="text-white">{{ $notification->message }}</p>
+                                @if(!empty($notification->data['module']))
+                                    <p class="text-sm text-blue-300">Terkait modul: {{ $notification->data['module'] }}</p>
+                                @endif
                                 <p class="text-sm text-gray-400">{{ $notification->created_at->diffForHumans() }}</p>
                             </div>
                             @if(!$notification->read)
@@ -51,7 +54,7 @@
                                         @csrf
                                         @method('PATCH')
                                         <button type="submit" class="text-sm text-blue-400 hover:text-blue-300">
-                                            {{ __('Mark as read') }}
+                                            Tandai dibaca
                                         </button>
                                     </form>
                                 </div>

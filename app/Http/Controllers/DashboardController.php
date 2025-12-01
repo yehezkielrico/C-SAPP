@@ -2,23 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Assessment;
 use App\Models\Module;
 use App\Models\ModuleProgress;
 use App\Models\Quiz;
 use App\Models\QuizResult;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
-use App\Models\Assessment;
 
 class DashboardController extends Controller
 {
     public function index()
     {
         $user = auth()->user();
-        
+
         // Get published modules
         $modules = Module::where('is_published', true)
             ->orderBy('order')
@@ -26,7 +24,7 @@ class DashboardController extends Controller
 
         // Get latest quizzes
         $latestQuizzes = Quiz::with('module')
-            ->whereHas('module', function($query) {
+            ->whereHas('module', function ($query) {
                 $query->where('is_published', true);
             })
             ->latest()
@@ -45,7 +43,7 @@ class DashboardController extends Controller
         $completedQuizzes = QuizResult::where('user_id', $user->id)
             ->distinct('module_id')
             ->count();
-        
+
         $quizCompletionRate = $totalQuizModules > 0 ? ($completedQuizzes / $totalQuizModules) * 100 : 0;
 
         // Calculate total learning time (in hours)
@@ -55,7 +53,7 @@ class DashboardController extends Controller
 
         // Get achievements
         $achievements = $this->getAchievements($user->id);
-        $unlockedAchievements = collect($achievements)->filter(function($achievement) {
+        $unlockedAchievements = collect($achievements)->filter(function ($achievement) {
             return $achievement['unlocked'];
         })->count();
         $totalAchievements = count($achievements);
@@ -64,7 +62,7 @@ class DashboardController extends Controller
         $progressOverview = [
             'labels' => [],
             'moduleData' => [],
-            'quizData' => []
+            'quizData' => [],
         ];
 
         // Get last 6 months of data
@@ -96,12 +94,12 @@ class DashboardController extends Controller
         $assessmentData = [
             'score' => $latestAssessment ? round($latestAssessment->score) : 0,
             'completed_at' => $latestAssessment ? $latestAssessment->completed_at->diffForHumans() : null,
-            'recommendations' => $this->getLearningRecommendations($user->id)
+            'recommendations' => $this->getLearningRecommendations($user->id),
         ];
 
         // Get modules that are related to user's interests or unread
         $recommendations = Module::where('is_published', true)
-            ->whereDoesntHave('progress', function($q) use ($user) {
+            ->whereDoesntHave('progress', function ($q) use ($user) {
                 $q->where('user_id', $user->id)
                     ->where('is_completed', true);
             })
@@ -109,13 +107,13 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        $assessmentData['recommendations'] = $recommendations->map(function($module) {
+        $assessmentData['recommendations'] = $recommendations->map(function ($module) {
             return [
                 'title' => $module->title,
                 'description' => $module->description,
                 'type' => $module->youtube_url ? 'video' : 'article',
                 'icon' => $module->youtube_url ? 'fa-play-circle' : 'fa-book-reader',
-                'link' => route('materials.module', $module)
+                'link' => route('materials.module', $module),
             ];
         });
 
@@ -150,60 +148,60 @@ class DashboardController extends Controller
         $completedModules = ModuleProgress::where('user_id', $userId)
             ->where('is_completed', true)
             ->count();
-        
+
         $completedQuizzes = QuizResult::where('user_id', $userId)->count();
         $averageScore = QuizResult::where('user_id', $userId)->avg('score') ?? 0;
         $totalTimeSpent = ModuleProgress::where('user_id', $userId)->sum('time_spent');
-        
+
         $achievements = [
             [
                 'title' => 'Pemula Siber',
                 'icon' => 'fa-graduation-cap',
                 'description' => 'Menyelesaikan modul pertama',
-                'unlocked' => $completedModules >= 1
+                'unlocked' => $completedModules >= 1,
             ],
             [
                 'title' => 'Pembelajar Aktif',
                 'icon' => 'fa-book-reader',
                 'description' => 'Menghabiskan 1 jam belajar',
-                'unlocked' => $totalTimeSpent >= 3600 // 1 hour in seconds
+                'unlocked' => $totalTimeSpent >= 3600, // 1 hour in seconds
             ],
             [
                 'title' => 'Mahir Kuis',
                 'icon' => 'fa-star',
                 'description' => 'Mendapatkan nilai rata-rata 80+',
-                'unlocked' => $averageScore >= 80
+                'unlocked' => $averageScore >= 80,
             ],
             [
                 'title' => 'Penguji Handal',
                 'icon' => 'fa-tasks',
                 'description' => 'Menyelesaikan 5 kuis',
-                'unlocked' => $completedQuizzes >= 5
+                'unlocked' => $completedQuizzes >= 5,
             ],
             [
                 'title' => 'Ahli Keamanan',
                 'icon' => 'fa-shield-alt',
                 'description' => 'Menyelesaikan semua modul',
-                'unlocked' => $completedModules >= Module::count()
+                'unlocked' => $completedModules >= Module::count(),
             ],
             [
                 'title' => 'Dedikasi Tinggi',
                 'icon' => 'fa-clock',
                 'description' => 'Menghabiskan 5 jam belajar',
-                'unlocked' => $totalTimeSpent >= 18000 // 5 hours in seconds
+                'unlocked' => $totalTimeSpent >= 18000, // 5 hours in seconds
             ],
             [
                 'title' => 'Sempurna',
                 'icon' => 'fa-crown',
                 'description' => 'Mendapatkan nilai 100 di kuis',
-                'unlocked' => QuizResult::where('user_id', $userId)->where('score', 100)->exists()
+                'unlocked' => QuizResult::where('user_id', $userId)->where('score', 100)->exists(),
             ],
             [
                 'title' => 'Master Siber',
                 'icon' => 'fa-award',
                 'description' => 'Menyelesaikan semua modul dengan nilai rata-rata 90+',
-                'unlocked' => $completedModules >= Module::count() && $averageScore >= 90
-            ]
+                'unlocked' => $completedModules >= Module::count() && $averageScore >= 90,
+            ],
         ];
 
         return $achievements;
@@ -213,69 +211,69 @@ class DashboardController extends Controller
     {
         $startDate = Carbon::now()->subWeeks(3)->startOfWeek();
         $endDate = Carbon::now()->endOfWeek();
-        
+
         $progress = [];
         $currentDate = $startDate;
-        
+
         while ($currentDate <= $endDate) {
             $weekEnd = $currentDate->copy()->endOfWeek();
-            
+
             $moduleProgress = ModuleProgress::where('user_id', $userId)
                 ->whereBetween('completed_at', [$currentDate, $weekEnd])
                 ->count();
-                
+
             $quizProgress = ModuleProgress::where('user_id', $userId)
                 ->whereNotNull('quiz_score')
                 ->whereBetween('completed_at', [$currentDate, $weekEnd])
                 ->count();
-                
+
             $progress[] = [
                 'week' => $currentDate->format('M d'),
                 'module_progress' => $moduleProgress,
-                'quiz_progress' => $quizProgress
+                'quiz_progress' => $quizProgress,
             ];
-            
+
             $currentDate->addWeek();
         }
-        
+
         return $progress;
     }
 
     private function getAchievementTimeline($userId)
     {
         $timeline = [];
-        
+
         // Get module completion achievements
         $moduleCompletions = ModuleProgress::where('user_id', $userId)
             ->whereNotNull('completed_at')
             ->orderBy('completed_at')
             ->get();
-            
+
         foreach ($moduleCompletions as $completion) {
             $timeline[] = [
-                'title' => 'Menyelesaikan Modul: ' . $completion->module->title,
-                'date' => $completion->completed_at->format('d M Y')
+                'title' => 'Menyelesaikan Modul: '.$completion->module->title,
+                'date' => $completion->completed_at->format('d M Y'),
             ];
         }
-        
+
         // Get quiz achievements
         $quizCompletions = ModuleProgress::where('user_id', $userId)
             ->whereNotNull('quiz_score')
             ->orderBy('completed_at')
             ->get();
-            
+
         foreach ($quizCompletions as $completion) {
             $timeline[] = [
-                'title' => 'Menyelesaikan Kuis: ' . $completion->module->title,
-                'date' => $completion->completed_at->format('d M Y')
+                'title' => 'Menyelesaikan Kuis: '.$completion->module->title,
+                'date' => $completion->completed_at->format('d M Y'),
             ];
         }
-        
+
         // Sort timeline by date
-        usort($timeline, function($a, $b) {
+        usort($timeline, function ($a, $b) {
             return strtotime($b['date']) - strtotime($a['date']);
         });
-        
+
         return array_slice($timeline, 0, 5); // Return only the 5 most recent achievements
     }
 
@@ -285,7 +283,7 @@ class DashboardController extends Controller
         $completedModuleIds = ModuleProgress::where('user_id', $userId)
             ->where('is_completed', true)
             ->pluck('module_id');
-        
+
         // Get unread modules
         $unreadModules = Module::where('is_published', true)
             ->whereNotIn('id', $completedModuleIds)
@@ -301,7 +299,7 @@ class DashboardController extends Controller
                 'title' => $module->title,
                 'description' => Str::limit($module->description, 100),
                 'link' => route('materials.module', $module),
-                'icon' => $module->youtube_url ? 'fa-play-circle' : 'fa-book-reader'
+                'icon' => $module->youtube_url ? 'fa-play-circle' : 'fa-book-reader',
             ];
         }
 
@@ -309,7 +307,7 @@ class DashboardController extends Controller
         if (count($recommendations) < 3) {
             $reviewModules = ModuleProgress::where('user_id', $userId)
                 ->where('is_completed', true)
-                ->whereHas('module', function($query) {
+                ->whereHas('module', function ($query) {
                     $query->where('is_published', true);
                 })
                 ->with('module')
@@ -320,10 +318,10 @@ class DashboardController extends Controller
             foreach ($reviewModules as $progress) {
                 $recommendations[] = [
                     'type' => $progress->module->youtube_url ? 'video' : 'article',
-                    'title' => "Ulasan: " . $progress->module->title,
-                    'description' => "Perkuat pemahaman Anda dengan mengulas materi ini kembali",
+                    'title' => 'Ulasan: '.$progress->module->title,
+                    'description' => 'Perkuat pemahaman Anda dengan mengulas materi ini kembali',
                     'link' => route('materials.module', $progress->module),
-                    'icon' => $progress->module->youtube_url ? 'fa-play-circle' : 'fa-book-reader'
+                    'icon' => $progress->module->youtube_url ? 'fa-play-circle' : 'fa-book-reader',
                 ];
             }
         }
@@ -335,15 +333,16 @@ class DashboardController extends Controller
     {
         // Implement your logic to determine the level based on the score
         // This is a placeholder and should be replaced with the actual implementation
-        return 'Level ' . (int)($score / 20 + 1);
+        return 'Level '.(int) ($score / 20 + 1);
     }
 
     private function determineNextLevel($currentLevel)
     {
         // Implement your logic to determine the next level
         // This is a placeholder and should be replaced with the actual implementation
-        $level = (int)substr($currentLevel, 5);
-        return 'Level ' . ($level + 1);
+        $level = (int) substr($currentLevel, 5);
+
+        return 'Level '.($level + 1);
     }
 
     private function calculateProgress($score, $level)
@@ -351,7 +350,8 @@ class DashboardController extends Controller
         // Implement your logic to calculate the progress percentage
         // This is a placeholder and should be replaced with the actual implementation
         $maxScore = 100;
-        $levelScore = (int)substr($level, 5) * 20;
+        $levelScore = (int) substr($level, 5) * 20;
+
         return ($score / $maxScore) * 100;
     }
 }

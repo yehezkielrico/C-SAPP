@@ -33,7 +33,7 @@ class QuizResult extends Model
 
     public static function getLatestResult($userId = null)
     {
-        if (!$userId) {
+        if (! $userId) {
             $userId = auth()->id();
         }
 
@@ -44,11 +44,11 @@ class QuizResult extends Model
 
     public static function getAverageScore($userId = null)
     {
-        if (!$userId) {
+        if (! $userId) {
             $userId = auth()->id();
         }
 
         return static::where('user_id', $userId)
             ->avg('score') ?? 0;
     }
-} 
+}

@@ -19,7 +19,7 @@ class Quiz extends Model
         'option_d',
         'correct_answer',
         'explanation',
-        'is_published'
+        'is_published',
     ];
 
     protected $casts = [
@@ -33,7 +33,7 @@ class Quiz extends Model
 
     public function isCompletedByUser($userId = null)
     {
-        if (!$userId) {
+        if (! $userId) {
             $userId = auth()->id();
         }
 
@@ -41,4 +41,4 @@ class Quiz extends Model
             ->where('module_id', $this->module_id)
             ->exists();
     }
-} 
+}

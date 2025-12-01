@@ -14,7 +14,7 @@ class SimulationController extends Controller
         $simulations = Simulation::with('creator')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-            
+
         return view('admin.simulations.index', compact('simulations'));
     }
 
@@ -33,7 +33,7 @@ class SimulationController extends Controller
             'steps.*' => 'required|string',
             'correct_answers' => 'required|array|min:1',
             'correct_answers.*' => 'required|string',
-            'is_published' => 'required|boolean'
+            'is_published' => 'required|boolean',
         ]);
 
         Simulation::create([
@@ -43,7 +43,7 @@ class SimulationController extends Controller
             'steps' => $request->steps,
             'correct_answers' => $request->correct_answers,
             'is_published' => $request->is_published,
-            'created_by' => Auth::id()
+            'created_by' => Auth::id(),
         ]);
 
         return redirect()->route('admin.simulations.index')
@@ -65,7 +65,7 @@ class SimulationController extends Controller
             'steps.*' => 'required|string',
             'correct_answers' => 'required|array|min:1',
             'correct_answers.*' => 'required|string',
-            'is_published' => 'required|boolean'
+            'is_published' => 'required|boolean',
         ]);
 
         $simulation->update([
@@ -74,7 +74,7 @@ class SimulationController extends Controller
             'type' => $request->type,
             'steps' => $request->steps,
             'correct_answers' => $request->correct_answers,
-            'is_published' => $request->is_published
+            'is_published' => $request->is_published,
         ]);
 
         return redirect()->route('admin.simulations.index')
@@ -88,4 +88,4 @@ class SimulationController extends Controller
         return redirect()->route('admin.simulations.index')
             ->with('success', 'Simulasi berhasil dihapus!');
     }
-} 
+}

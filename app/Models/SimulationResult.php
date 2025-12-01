@@ -15,13 +15,13 @@ class SimulationResult extends Model
         'user_answers',
         'score',
         'feedback',
-        'completed_at'
+        'completed_at',
     ];
 
     protected $casts = [
         'user_answers' => 'array',
         'completed_at' => 'datetime',
-        'score' => 'integer'
+        'score' => 'integer',
     ];
 
     public function user()
@@ -33,4 +33,4 @@ class SimulationResult extends Model
     {
         return $this->belongsTo(Simulation::class);
     }
-} 
+}

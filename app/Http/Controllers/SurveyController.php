@@ -24,7 +24,7 @@ class SurveyController extends Controller
 
     public function show(Survey $survey)
     {
-        if (!$survey->is_published) {
+        if (! $survey->is_published) {
             return redirect()->route('surveys.index')
                 ->with('error', 'Survei ini belum dipublikasikan.');
         }
@@ -41,7 +41,7 @@ class SurveyController extends Controller
         $request->validate([
             'answers' => 'required|array',
             'answers.*' => 'required|string',
-            'feedback' => 'nullable|string|max:1000'
+            'feedback' => 'nullable|string|max:1000',
         ]);
 
         // Check if user has already responded
@@ -59,7 +59,7 @@ class SurveyController extends Controller
             'survey_id' => $survey->id,
             'user_id' => $survey->is_anonymous ? null : Auth::id(),
             'answers' => $request->answers,
-            'feedback' => $request->feedback
+            'feedback' => $request->feedback,
         ]);
 
         return redirect()->route('surveys.index')
@@ -68,7 +68,7 @@ class SurveyController extends Controller
 
     public function results(Survey $survey)
     {
-        if (!Auth::user()->is_admin) {
+        if (! Auth::user()->is_admin) {
             return redirect()->route('surveys.index')
                 ->with('error', 'Anda tidak memiliki akses ke halaman ini.');
         }
@@ -86,4 +86,4 @@ class SurveyController extends Controller
             'responseDistribution'
         ));
     }
-} 
+}

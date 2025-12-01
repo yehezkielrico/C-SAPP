@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ModuleProgress extends Model
 {
     protected $table = 'module_progress';
-    
+
     protected $fillable = [
         'user_id',
         'module_id',
@@ -32,4 +32,4 @@ class ModuleProgress extends Model
     {
         return $this->belongsTo(Module::class);
     }
-} 
+}

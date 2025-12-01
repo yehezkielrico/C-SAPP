@@ -13,12 +13,12 @@ class Certificate extends Model
         'certificate_number',
         'title',
         'score',
-        'issued_at'
+        'issued_at',
     ];
 
     protected $casts = [
         'issued_at' => 'datetime',
-        'score' => 'decimal:2'
+        'score' => 'decimal:2',
     ];
 
     public function user(): BelongsTo
@@ -36,6 +36,7 @@ class Certificate extends Model
         $prefix = 'CERT';
         $year = date('Y');
         $random = strtoupper(substr(uniqid(), -6));
-        return $prefix . '-' . $year . '-' . $random;
+
+        return $prefix.'-'.$year.'-'.$random;
     }
-} 
+}
