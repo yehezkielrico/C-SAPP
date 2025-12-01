@@ -346,6 +346,12 @@
             display: block;
             margin: 0 auto 8px auto;
         }
+        .signature-placeholder {
+            font-size: 12px;
+            color: #7f8c8d;
+            font-style: italic;
+            margin-bottom: 8px;
+        }
         
         .watermark {
             position: absolute;
@@ -394,6 +400,12 @@
     </style>
 </head>
 <body>
+    @php
+        $canRenderImages = extension_loaded('gd');
+        $logoPath = public_path('storage/images/LOGO.png');
+        $sealPath = public_path('storage/images/cap.png');
+        $signaturePath = public_path('storage/images/signature.png');
+    @endphp
     <div class="certificate">
         <div class="border-outer"></div>
         <div class="border-inner"></div>
@@ -409,7 +421,11 @@
             <div class="header">
                 <div class="logo-section">
                 <div class="logo">
-                        <img src="{{ public_path('storage/images/LOGO.png') }}" alt="Logo">
+                        @if($canRenderImages && file_exists($logoPath))
+                            <img src="{{ $logoPath }}" alt="Logo">
+                        @else
+                            <div class="logo-text">CS</div>
+                        @endif
                         </div>
                     <div class="organization">
                         <div class="org-name">C-SAPP Learning Platform</div>
@@ -455,12 +471,18 @@
         </div>
         
         <div class="seal">
-            <img src="{{ public_path('storage/images/cap.png') }}" alt="Cap" class="seal-image">
+            @if($canRenderImages && file_exists($sealPath))
+                <img src="{{ $sealPath }}" alt="Cap" class="seal-image">
+            @endif
             <div class="seal-text">OFFICIAL<br>SEAL</div>
         </div>
         
         <div class="signature-section">
-            <img src="{{ public_path('storage/images/signature.png') }}" alt="Tanda Tangan" class="signature-image">
+            @if($canRenderImages && file_exists($signaturePath))
+                <img src="{{ $signaturePath }}" alt="Tanda Tangan" class="signature-image">
+            @else
+                <div class="signature-placeholder">Signed electronically</div>
+            @endif
             <div class="signature-line"></div>
             <div class="signature-name">Administrator</div>
             <div class="signature-title">C-SAPP Learning Platform</div>
