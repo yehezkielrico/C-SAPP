@@ -338,12 +338,16 @@
         .signature-title {
             font-size: 11px;
             color: #7f8c8d;
+            text-align: center;
+            display: block;
+            margin-top: 2px;
         }
         
         .signature-image {
             width: 120px;
             height: auto;
             display: block;
+            bottom: 15mm;
             margin: 0 auto 8px auto;
         }
         .signature-placeholder {

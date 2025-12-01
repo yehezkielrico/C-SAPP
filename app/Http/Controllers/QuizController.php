@@ -201,7 +201,7 @@ class QuizController extends Controller
             return view('quizzes.error', [
                 'message' => 'Halaman hasil kuis tidak dapat diakses secara langsung.',
                 'description' => 'Untuk melihat hasil kuis, Anda harus mengerjakan kuis terlebih dahulu.',
-                'action_link' => route('materials'),
+                'action_link' => route('materials.index'),
                 'action_text' => 'Lihat Daftar Materi',
             ]);
         }
@@ -223,7 +223,7 @@ class QuizController extends Controller
             return view('quizzes.error', [
                 'message' => 'Terjadi kesalahan saat memuat hasil kuis.',
                 'description' => 'Silakan coba kembali mengerjakan kuis.',
-                'action_link' => route('materials'),
+                'action_link' => route('materials.index'),
                 'action_text' => 'Lihat Daftar Materi',
             ]);
         } finally {
