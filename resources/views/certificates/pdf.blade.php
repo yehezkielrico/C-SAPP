@@ -424,10 +424,12 @@
             <div class="header">
                 <div class="logo-section">
                 <div class="logo">
-                        @if(file_exists($logoSvgPath))
-                            {!! file_get_contents($logoSvgPath) !!}
-                        @elseif($canRenderImages && file_exists($logoPath))
+                        @if($canRenderImages && file_exists($logoPath))
+                            {{-- Lokal / server dengan GD: pakai PNG --}}
                             <img src="{{ $logoPath }}" alt="Logo">
+                        @elseif(file_exists($logoSvgPath))
+                            {{-- Server tanpa GD (mis. Vercel): pakai SVG inline --}}
+                            {!! file_get_contents($logoSvgPath) !!}
                         @else
                             <div class="logo-text">CS</div>
                         @endif
@@ -476,19 +478,19 @@
         </div>
         
         <div class="seal">
-            @if(file_exists($sealSvgPath))
-                {!! file_get_contents($sealSvgPath) !!}
-            @elseif($canRenderImages && file_exists($sealPath))
+            @if($canRenderImages && file_exists($sealPath))
                 <img src="{{ $sealPath }}" alt="Cap" class="seal-image">
+            @elseif(file_exists($sealSvgPath))
+                {!! file_get_contents($sealSvgPath) !!}
             @endif
             <div class="seal-text">OFFICIAL<br>SEAL</div>
         </div>
         
         <div class="signature-section">
-            @if(file_exists($signatureSvgPath))
-                {!! file_get_contents($signatureSvgPath) !!}
-            @elseif($canRenderImages && file_exists($signaturePath))
+            @if($canRenderImages && file_exists($signaturePath))
                 <img src="{{ $signaturePath }}" alt="Tanda Tangan" class="signature-image">
+            @elseif(file_exists($signatureSvgPath))
+                {!! file_get_contents($signatureSvgPath) !!}
             @else
                 <div class="signature-placeholder">Signed electronically</div>
             @endif
