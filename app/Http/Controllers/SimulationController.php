@@ -11,6 +11,7 @@ class SimulationController extends Controller
 {
     public function index()
     {
+        // Get all published simulations (SoftDeletes automatically excludes deleted records)
         $simulations = Simulation::where('is_published', true)
             ->orderBy('created_at', 'desc')
             ->get();
@@ -24,6 +25,12 @@ class SimulationController extends Controller
 
     public function show(Simulation $simulation)
     {
+        // Check if simulation is deleted
+        if ($simulation->trashed()) {
+            return redirect()->route('simulations.index')
+                ->with('error', 'Simulasi tidak ditemukan.');
+        }
+
         if (! $simulation->is_published) {
             return redirect()->route('simulations.index')
                 ->with('error', 'Simulasi ini belum dipublikasikan.');
@@ -36,6 +43,12 @@ class SimulationController extends Controller
 
     public function start(Simulation $simulation)
     {
+        // Check if simulation is deleted
+        if ($simulation->trashed()) {
+            return redirect()->route('simulations.index')
+                ->with('error', 'Simulasi tidak ditemukan.');
+        }
+
         if (! $simulation->is_published) {
             return redirect()->route('simulations.index')
                 ->with('error', 'Simulasi ini belum dipublikasikan.');
@@ -46,6 +59,17 @@ class SimulationController extends Controller
 
     public function submit(Request $request, Simulation $simulation)
     {
+        // Check if simulation is deleted
+        if ($simulation->trashed()) {
+            return redirect()->route('simulations.index')
+                ->with('error', 'Simulasi tidak ditemukan.');
+        }
+
+        if (! $simulation->is_published) {
+            return redirect()->route('simulations.index')
+                ->with('error', 'Simulasi ini belum dipublikasikan.');
+        }
+
         $request->validate([
             'answers' => 'required|array',
             'answers.*' => 'required|string',
